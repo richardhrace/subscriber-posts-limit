@@ -156,6 +156,10 @@ class WP_UPL {
 		if ( has_filter( 'upl_query' ) ) {
 			echo '<div id="message" class="notice notice-info is-dismissible"><p>' . esc_attr__( 'Some rules were modified by code, contact your developer to make changes when required', 'subscriber-posts-limit' ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
 		}
+		$subscription_plans = array();
+		if ( function_exists( 'pms_get_subscription_plans' ) ) {
+			$subscription_plans = pms_get_subscription_plans();
+		}
 		?>
 		<div>
 			<h2><?php esc_html_e( 'Subscriber Posts Limit', 'subscriber-posts-limit' ); echo " "; esc_html_e( 'Settings' ); ?></h2>
@@ -202,8 +206,24 @@ class WP_UPL {
 				<?php for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) : ?>
 					<th><h2><?php echo '#'; echo $i+1; ?></h2></th>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'The subscriber plan to limit', 'subscriber-posts-limit' ); ?>" for="upl_subscriber_plan[<?php echo $i; ?>]"><?php esc_html_e( 'Role' ); ?></label></th>
-						<td><select id="upl_subscriber_plan[<?php echo $i; ?>]" name="upl_subscriber_plan[<?php echo $i; ?>]"><?php wp_dropdown_roles( isset( get_option( 'upl_subscriber_plan' )[ $i ] ) ? get_option( 'upl_subscriber_plan' )[ $i ] : '' ); ?></select></td>
+						<th><label title="<?php esc_html_e( 'The subscriber plan to limit', 'subscriber-posts-limit' ); ?>" for="upl_subscriber_plan[<?php echo $i; ?>]"><?php esc_html_e( 'Subscription Plan' ); ?></label></th>
+						<td>
+							<select id="upl_subscriber_plan[<?php echo $i; ?>]" name="upl_subscriber_plan[<?php echo $i; ?>]">
+								<?php
+									$selected = isset( get_option( 'upl_subscriber_plan' )[ $i ] ) ? get_option( 'upl_subscriber_plan' )[ $i ] : '';
+									foreach ( $subscription_plans as $plan => $value ) {
+										$name = $value->name;
+										$r = "";
+										if ( $selected === $plan ) {
+											$r .= "\n\t<option selected='selected' value='" . esc_attr( $plan ) . "'>$name</option>";
+										} else {
+											$r .= "\n\t<option value='" . esc_attr( $plan ) . "'>$name</option>";
+										}
+										echo $r;
+									}
+								?> 
+							</select>
+						</td>
 					</tr>
 					<tr valign="top">
 						<th><label title="<?php esc_html_e( 'The type of the posts to limit', 'subscriber-posts-limit' ); ?>" for="upl_posts_type[<?php echo $i; ?>]"><?php esc_html_e( 'Type' ); ?></label></th>
@@ -280,7 +300,7 @@ class WP_UPL {
 	 */
 	public function wp_network_register_settings() {
 		add_site_option( 'upl_site_rules_count', '1' );
-		add_site_option( 'upl_site_user_role', [ '' ] );
+		add_site_option( 'upl_site_subscriber_plan', [ '' ] );
 		add_site_option( 'upl_site_posts_type', '' );
 		add_site_option( 'upl_site_num_limit', '' );
 		add_site_option( 'upl_site_period', '' );
@@ -300,6 +320,10 @@ class WP_UPL {
 		if ( has_filter( 'upl_network_query' ) ) {
 			echo '<div id="message" class="notice notice-info is-dismissible"><p>' . esc_attr__( 'Some rules were modified by code, contact you developer to make changes when required', 'subscriber-posts-limit' ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
 		}
+		$subscription_plans = array();
+		if ( function_exists( 'pms_get_subscription_plans' ) ) {
+			$subscription_plans = pms_get_subscription_plans();
+		}
 		?>
 		<div>
 			<h2><?php esc_html_e( 'Subscriber Posts Limit', 'subscriber-posts-limit' ); echo " "; esc_html_e( 'Settings' ); ?></h2>
@@ -313,8 +337,24 @@ class WP_UPL {
 				<?php for ( $i = 0; $i < get_site_option( 'upl_site_rules_count' ); $i++ ) : ?>
 					<th><h2><?php echo '#'; echo $i+1; ?></h2></th>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'The subscriber plan to limit', 'subscriber-posts-limit' ); ?>" for="upl_site_user_role[<?php echo $i; ?>]"><?php esc_html_e( 'Role' ); ?></label></th>
-						<td><select id="upl_site_user_role[<?php echo $i; ?>]" name="upl_site_user_role[<?php echo $i; ?>]"><?php wp_dropdown_roles( isset( get_site_option( 'upl_site_user_role' )[ $i ] ) ? get_site_option( 'upl_site_user_role' )[ $i ] : '' ); ?></select></td>
+						<th><label title="<?php esc_html_e( 'The subscriber plan to limit', 'subscriber-posts-limit' ); ?>" for="upl_site_subscriber_plan[<?php echo $i; ?>]"><?php esc_html_e( 'Subscription plan' ); ?></label></th>
+						<td>
+							<select id="upl_site_subscriber_plan[<?php echo $i; ?>]" name="upl_site_subscriber_plan[<?php echo $i; ?>]">
+								<?php
+									$selected = isset( get_option( 'upl_site_subscriber_plan' )[ $i ] ) ? get_option( 'upl_site_subscriber_plan' )[ $i ] : '';
+									foreach ( $subscription_plans as $plan => $value ) {
+										$name = $value->name;
+										$r = "";
+										if ( $selected === $plan ) {
+											$r .= "\n\t<option selected='selected' value='" . esc_attr( $plan ) . "'>$name</option>";
+										} else {
+											$r .= "\n\t<option value='" . esc_attr( $plan ) . "'>$name</option>";
+										}
+										echo $r;
+									}
+								?>
+							</select>
+						</td>
 					</tr>
 					<tr valign="top">
 						<th><label title="<?php esc_html_e( 'The type of the posts to limit', 'subscriber-posts-limit' ); ?>" for="upl_site_posts_type[<?php echo $i; ?>]"><?php esc_html_e( 'Type' ); ?></label></th>
@@ -354,7 +394,7 @@ class WP_UPL {
 	public function wp_save_settings() {
 		check_admin_referer( 'upl-validate' );
 		update_site_option( 'upl_site_rules_count', $_POST['upl_site_rules_count'] );
-		update_site_option( 'upl_site_user_role', $_POST['upl_site_user_role'] );
+		update_site_option( 'upl_site_subscriber_plan', $_POST['upl_site_subscriber_plan'] );
 		update_site_option( 'upl_site_posts_type', $_POST['upl_site_posts_type'] );
 		update_site_option( 'upl_site_num_limit', $_POST['upl_site_num_limit'] );
 		update_site_option( 'upl_site_period', $_POST['upl_site_period'] );
@@ -369,8 +409,8 @@ class WP_UPL {
 	 */
 	public function wp_custom_notices() {
 		if ( isset( $_GET['page'] ) && $_GET['page'] == 'posts-limit' && isset( $_GET['updated'] ) ) {
-			if ( get_site_option( 'upl_site_rules_count' ) && get_site_option( 'upl_site_user_role' ) ) {
-				foreach ( get_site_option( 'upl_site_user_role' ) as $key => $role ) {
+			if ( get_site_option( 'upl_site_rules_count' ) && get_site_option( 'upl_site_subscriber_plan' ) ) {
+				foreach ( get_site_option( 'upl_site_subscriber_plan' ) as $key => $role ) {
 					if ( $key >= get_site_option( 'upl_site_rules_count' ) ) {
 						break;
 					}
@@ -423,7 +463,7 @@ class WP_UPL {
 		if ( empty( $postarr['ID'] ) && ( ! is_multisite() || is_multisite() && ! current_user_can( 'create_users' ) ) ) {
 			if ( is_multisite() && get_site_option( 'upl_site_rules_count' ) ) {
 				for ( $i = 0; $i < get_site_option( 'upl_site_rules_count' ); $i++ ) {
-					if ( isset( get_site_option( 'upl_site_num_limit' )[ $i ] ) && '' !== get_site_option( 'upl_site_num_limit' )[ $i ] && get_site_option( 'upl_site_posts_type' )[ $i ] === $postarr['post_type'] && current_user_can( get_site_option( 'upl_site_user_role' )[ $i ] ) ) {
+					if ( isset( get_site_option( 'upl_site_num_limit' )[ $i ] ) && '' !== get_site_option( 'upl_site_num_limit' )[ $i ] && get_site_option( 'upl_site_posts_type' )[ $i ] === $postarr['post_type'] && current_user_can( get_site_option( 'upl_site_subscriber_plan' )[ $i ] ) ) {
 						$upl_query = new wp_query( apply_filters( 'upl_network_query', [
 							'author'	=> $postarr['post_author'],
 							'post_type'	=> $postarr['post_type'],
