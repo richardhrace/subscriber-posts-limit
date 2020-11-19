@@ -125,7 +125,7 @@ class WP_UPL {
 		add_option( 'upl_priority', 'permissive' );
 		add_option( 'upl_manage_cap', 'manage_options' );
 		add_option( 'upl_stats', '' );
-		add_option( 'upl_user_role', [ '' ] );
+		add_option( 'upl_subscriber_plan', [ '' ] );
 		add_option( 'upl_posts_type' );
 		add_option( 'upl_num_limit' );
 		add_option( 'upl_period' );
@@ -135,7 +135,7 @@ class WP_UPL {
 		register_setting( 'upl_options_group', 'upl_priority', 'sanitize_text_field' );
 		register_setting( 'upl_options_group', 'upl_manage_cap', 'sanitize_text_field' );
 		register_setting( 'upl_options_group', 'upl_stats', 'sanitize_text_field' );
-		register_setting( 'upl_options_group', 'upl_user_role', [ $this, 'upl_sanitize_role' ] );
+		register_setting( 'upl_options_group', 'upl_subscriber_plan', [ $this, 'upl_sanitize_role' ] );
 		register_setting( 'upl_options_group', 'upl_posts_type' );
 		register_setting( 'upl_options_group', 'upl_num_limit' );
 		register_setting( 'upl_options_group', 'upl_period' );
@@ -179,7 +179,7 @@ class WP_UPL {
 					</td>
 				</tr>
 				<tr valign="top">
-					<th><label title="<?php esc_html_e( 'Permissive' ); echo ': '; esc_html_e( 'Limit when all of the user relevant rules were passed', 'subscriber-posts-limit' ); echo '. '; esc_html_e( 'Restrictive' ); echo ': '; esc_html_e( 'Limit when any of the user relevant rules was passed', 'subscriber-posts-limit' ); echo '. '; esc_html_e( 'For more accurate messsage data when multiple rules applied on the same user & post type, put the strictest rules at the bottom in Permissive and at the top for Restrictive', 'subscriber-posts-limit' ); echo '.'; ?>" for="upl_priority"><?php esc_html_e( 'Priority' ); ?></label></th>
+					<th><label title="<?php esc_html_e( 'Permissive' ); echo ': '; esc_html_e( 'Limit when all of the subscriber relevant rules were passed', 'subscriber-posts-limit' ); echo '. '; esc_html_e( 'Restrictive' ); echo ': '; esc_html_e( 'Limit when any of the subscriber relevant rules was passed', 'subscriber-posts-limit' ); echo '. '; esc_html_e( 'For more accurate messsage data when multiple rules applied on the same user & post type, put the strictest rules at the bottom in Permissive and at the top for Restrictive', 'subscriber-posts-limit' ); echo '.'; ?>" for="upl_priority"><?php esc_html_e( 'Priority' ); ?></label></th>
 					<td><select id="upl_priority" name="upl_priority">
 						<option value="permissive"<?php selected( get_option( 'upl_priority' ), 'permissive' ); ?>><?php esc_html_e( 'Permissive' ); ?></option>
 						<option value="restrictive"<?php selected( get_option( 'upl_priority' ), 'restrictive' ); ?>><?php esc_html_e( 'Restrictive' ); ?></option>
@@ -202,8 +202,8 @@ class WP_UPL {
 				<?php for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) : ?>
 					<th><h2><?php echo '#'; echo $i+1; ?></h2></th>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'The user role to limit', 'subscriber-posts-limit' ); ?>" for="upl_user_role[<?php echo $i; ?>]"><?php esc_html_e( 'Role' ); ?></label></th>
-						<td><select id="upl_user_role[<?php echo $i; ?>]" name="upl_user_role[<?php echo $i; ?>]"><?php wp_dropdown_roles( isset( get_option( 'upl_user_role' )[ $i ] ) ? get_option( 'upl_user_role' )[ $i ] : '' ); ?></select></td>
+						<th><label title="<?php esc_html_e( 'The subscriber plan to limit', 'subscriber-posts-limit' ); ?>" for="upl_subscriber_plan[<?php echo $i; ?>]"><?php esc_html_e( 'Role' ); ?></label></th>
+						<td><select id="upl_subscriber_plan[<?php echo $i; ?>]" name="upl_subscriber_plan[<?php echo $i; ?>]"><?php wp_dropdown_roles( isset( get_option( 'upl_subscriber_plan' )[ $i ] ) ? get_option( 'upl_subscriber_plan' )[ $i ] : '' ); ?></select></td>
 					</tr>
 					<tr valign="top">
 						<th><label title="<?php esc_html_e( 'The type of the posts to limit', 'subscriber-posts-limit' ); ?>" for="upl_posts_type[<?php echo $i; ?>]"><?php esc_html_e( 'Type' ); ?></label></th>
@@ -236,7 +236,7 @@ class WP_UPL {
 	}
 
 	/**
-	 * Sanitizes the user role option
+	 * Sanitizes the subscriber plan option
 	 * @param mixed $input
 	 * @return mixed
 	 */
@@ -250,14 +250,14 @@ class WP_UPL {
 				$wpmu_role = is_multisite() && 'create_users' !== get_option( 'upl_manage_cap' ) ? '/create_users' : '';
 				if ( 'manage_options' === get_option( 'upl_manage_cap' ) || $role_obj->has_cap( 'create_users' ) && get_site_option( 'add_new_users' ) ) {
 					$input[ $key ] = 'subscriber';
-					add_settings_error( 'upl_user_role', 'upl_user_role', __( 'Limits can not be applied on users that have the capability', 'subscriber-posts-limit' ) . ": manage_options$wpmu_role. #" . ( $key + 1 ) );
+					add_settings_error( 'upl_subscriber_plan', 'upl_subscriber_plan', __( 'Limits can not be applied on users that have the capability', 'subscriber-posts-limit' ) . ": manage_options$wpmu_role. #" . ( $key + 1 ) );
 					continue;
 				} else {
-					add_settings_error( 'upl_user_role', 'upl_user_role', __( 'The limit will be applied only on users that do not have the Plugin Management Capability', 'subscriber-posts-limit' ) . ' (' . get_option( 'upl_manage_cap' ) . ")$wpmu_role. #" . ( $key + 1 ), 'info' );
+					add_settings_error( 'upl_subscriber_plan', 'upl_subscriber_plan', __( 'The limit will be applied only on users that do not have the Plugin Management Capability', 'subscriber-posts-limit' ) . ' (' . get_option( 'upl_manage_cap' ) . ")$wpmu_role. #" . ( $key + 1 ), 'info' );
 				}
 			}
 			if ( $role_obj->has_cap( 'edit_others_posts' ) || $role_obj->has_cap( 'edit_others_pages' ) ) {
-				add_settings_error( 'upl_user_role', 'upl_user_role', __( 'To prevent bypassing the limits make sure the users do not have the capability to modify posts of others in the selected post type', 'subscriber-posts-limit' ) . '. #' . ( $key + 1 ), 'info' );
+				add_settings_error( 'upl_subscriber_plan', 'upl_subscriber_plan', __( 'To prevent bypassing the limits make sure the users do not have the capability to modify posts of others in the selected post type', 'subscriber-posts-limit' ) . '. #' . ( $key + 1 ), 'info' );
 			}
 		}
 		return $input;
@@ -313,7 +313,7 @@ class WP_UPL {
 				<?php for ( $i = 0; $i < get_site_option( 'upl_site_rules_count' ); $i++ ) : ?>
 					<th><h2><?php echo '#'; echo $i+1; ?></h2></th>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'The user role to limit', 'subscriber-posts-limit' ); ?>" for="upl_site_user_role[<?php echo $i; ?>]"><?php esc_html_e( 'Role' ); ?></label></th>
+						<th><label title="<?php esc_html_e( 'The subscriber plan to limit', 'subscriber-posts-limit' ); ?>" for="upl_site_user_role[<?php echo $i; ?>]"><?php esc_html_e( 'Role' ); ?></label></th>
 						<td><select id="upl_site_user_role[<?php echo $i; ?>]" name="upl_site_user_role[<?php echo $i; ?>]"><?php wp_dropdown_roles( isset( get_site_option( 'upl_site_user_role' )[ $i ] ) ? get_site_option( 'upl_site_user_role' )[ $i ] : '' ); ?></select></td>
 					</tr>
 					<tr valign="top">
@@ -444,7 +444,7 @@ class WP_UPL {
 			if ( ! current_user_can( get_option( 'upl_manage_cap' ) ) ) {
 				$relevant_rule = '';
 				for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) {
-					if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $postarr['post_type'] && current_user_can( get_option( 'upl_user_role' )[ $i ] ) ) {
+					if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $postarr['post_type'] && current_user_can( get_option( 'upl_subscriber_plan' )[ $i ] ) ) {
 						$upl_query = new wp_query( apply_filters( 'upl_query', [
 							'orderby'	=> 'date',
 							'order'		=> 'ASC',
@@ -514,7 +514,7 @@ class WP_UPL {
 			$post_author = get_current_user_id();
 			$relevant_rule = '';
 			for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) {
-				if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $atts['type'] && current_user_can( get_option( 'upl_user_role' )[ $i ] ) ) {
+				if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $atts['type'] && current_user_can( get_option( 'upl_subscriber_plan' )[ $i ] ) ) {
 					$upl_query = new wp_query( apply_filters( 'upl_query', [
 						'author'	=> $post_author,
 						'post_type'	=> $atts['type'],
@@ -616,7 +616,7 @@ class WP_UPL {
 	 */
 	public function wp_modify_user_table_row( $row_output, $column_id_attr, $user_id ) {
 		$i = str_replace( 'rule', '', $column_id_attr );
-		if ( isset( get_option( 'upl_user_role' )[ $i ] ) && in_array( get_option( 'upl_user_role' )[ $i ], get_userdata( $user_id )->roles ) && ! user_can( $user_id, get_option( 'upl_manage_cap' ) ) && ( ! is_multisite() || is_multisite() && ! user_can( $user_id, 'create_users' ) ) ) {
+		if ( isset( get_option( 'upl_subscriber_plan' )[ $i ] ) && in_array( get_option( 'upl_subscriber_plan' )[ $i ], get_userdata( $user_id )->roles ) && ! user_can( $user_id, get_option( 'upl_manage_cap' ) ) && ( ! is_multisite() || is_multisite() && ! user_can( $user_id, 'create_users' ) ) ) {
 			$upl_query = new wp_query( apply_filters( 'upl_query', [
 				'author'	=> $user_id,
 				'post_type'	=> get_option( 'upl_posts_type' )[ $i ],
@@ -636,7 +636,7 @@ class WP_UPL {
 		$limits = [];
 		if ( ! current_user_can( get_option( 'upl_manage_cap' ) ) && ( ! is_multisite() || is_multisite() && ! current_user_can( 'create_users' ) ) ) {
 			for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) {
-				if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && current_user_can( get_option( 'upl_user_role' )[ $i ] ) ) {
+				if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && current_user_can( get_option( 'upl_subscriber_plan' )[ $i ] ) ) {
 					$upl_query = new wp_query( apply_filters( 'upl_query', [
 						'author'	=> get_current_user_id(),
 						'post_type'	=> get_option( 'upl_posts_type' )[ $i ],
