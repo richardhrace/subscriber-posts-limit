@@ -261,25 +261,27 @@ class WP_UPL {
 	 * @return mixed
 	 */
 	public function upl_sanitize_plan( $input ) {
-		foreach( $input as $key => $role ) {
-			if ( $key >= get_option( 'upl_rules_count' ) ) {
-				break;
-			}
-			$role_obj = get_role( $role );
-			if ( $role_obj->has_cap( get_option( 'upl_manage_cap' ) ) || $role_obj->has_cap( 'create_users' ) && get_site_option( 'add_new_users' ) ) {
-				$wpmu_role = is_multisite() && 'create_users' !== get_option( 'upl_manage_cap' ) ? '/create_users' : '';
-				if ( 'manage_options' === get_option( 'upl_manage_cap' ) || $role_obj->has_cap( 'create_users' ) && get_site_option( 'add_new_users' ) ) {
-					$input[ $key ] = 'subscriber';
-					add_settings_error( 'upl_subscriber_plan', 'upl_subscriber_plan', __( 'Limits can not be applied on users that have the capability', 'subscriber-posts-limit' ) . ": manage_options$wpmu_role. #" . ( $key + 1 ) );
-					continue;
-				} else {
-					add_settings_error( 'upl_subscriber_plan', 'upl_subscriber_plan', __( 'The limit will be applied only on users that do not have the Plugin Management Capability', 'subscriber-posts-limit' ) . ' (' . get_option( 'upl_manage_cap' ) . ")$wpmu_role. #" . ( $key + 1 ), 'info' );
-				}
-			}
-			if ( $role_obj->has_cap( 'edit_others_posts' ) || $role_obj->has_cap( 'edit_others_pages' ) ) {
-				add_settings_error( 'upl_subscriber_plan', 'upl_subscriber_plan', __( 'To prevent bypassing the limits make sure the users do not have the capability to modify posts of others in the selected post type', 'subscriber-posts-limit' ) . '. #' . ( $key + 1 ), 'info' );
-			}
-		}
+		// add the stuff get role list by subscription plans group if you need.
+
+		// foreach( $input as $key => $role ) {
+		// 	if ( $key >= get_option( 'upl_rules_count' ) ) {
+		// 		break;
+		// 	}
+		// 	$role_obj = get_role( $role );
+		// 	if ( $role_obj->has_cap( get_option( 'upl_manage_cap' ) ) || $role_obj->has_cap( 'create_users' ) && get_site_option( 'add_new_users' ) ) {
+		// 		$wpmu_role = is_multisite() && 'create_users' !== get_option( 'upl_manage_cap' ) ? '/create_users' : '';
+		// 		if ( 'manage_options' === get_option( 'upl_manage_cap' ) || $role_obj->has_cap( 'create_users' ) && get_site_option( 'add_new_users' ) ) {
+		// 			$input[ $key ] = 'subscriber';
+		// 			add_settings_error( 'upl_subscriber_plan', 'upl_subscriber_plan', __( 'Limits can not be applied on users that have the capability', 'subscriber-posts-limit' ) . ": manage_options$wpmu_role. #" . ( $key + 1 ) );
+		// 			continue;
+		// 		} else {
+		// 			add_settings_error( 'upl_subscriber_plan', 'upl_subscriber_plan', __( 'The limit will be applied only on users that do not have the Plugin Management Capability', 'subscriber-posts-limit' ) . ' (' . get_option( 'upl_manage_cap' ) . ")$wpmu_role. #" . ( $key + 1 ), 'info' );
+		// 		}
+		// 	}
+		// 	if ( $role_obj->has_cap( 'edit_others_posts' ) || $role_obj->has_cap( 'edit_others_pages' ) ) {
+		// 		add_settings_error( 'upl_subscriber_plan', 'upl_subscriber_plan', __( 'To prevent bypassing the limits make sure the users do not have the capability to modify posts of others in the selected post type', 'subscriber-posts-limit' ) . '. #' . ( $key + 1 ), 'info' );
+		// 	}
+		// }
 		return $input;
 	}
 
@@ -408,22 +410,22 @@ class WP_UPL {
 	 * @return mixed
 	 */
 	public function wp_custom_notices() {
-		if ( isset( $_GET['page'] ) && $_GET['page'] == 'posts-limit' && isset( $_GET['updated'] ) ) {
-			if ( get_site_option( 'upl_site_rules_count' ) && get_site_option( 'upl_site_subscriber_plan' ) ) {
-				foreach ( get_site_option( 'upl_site_subscriber_plan' ) as $key => $role ) {
-					if ( $key >= get_site_option( 'upl_site_rules_count' ) ) {
-						break;
-					}
-					$role_obj = get_role( $role );
-					if ( $role_obj->has_cap( 'create_users' ) && get_site_option( 'add_new_users' ) ) {
-						echo '<div id="message" class="notice notice-warning is-dismissible"><p>' . __( 'Limits can not be applied on users that have the capability', 'subscriber-posts-limit' ) . ": create_users. $role" . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
-					} elseif ( $role_obj->has_cap( 'edit_others_pages' ) || $role_obj->has_cap( 'edit_others_posts' ) ) {
-						echo '<div id="message" class="notice notice-info is-dismissible"><p>' . __( 'To prevent bypassing the limits make sure the users do not have the capability to modify posts of others in the selected post type', 'subscriber-posts-limit' ) . '. #' . ( $key + 1 ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
-					}
-				}
-			}
-			echo '<div id="message" class="updated notice is-dismissible"><p>' . __( 'Settings updated.' ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
-		}
+		// if ( isset( $_GET['page'] ) && $_GET['page'] == 'posts-limit' && isset( $_GET['updated'] ) ) {
+		// 	if ( get_site_option( 'upl_site_rules_count' ) && get_site_option( 'upl_site_subscriber_plan' ) ) {
+		// 		foreach ( get_site_option( 'upl_site_subscriber_plan' ) as $key => $role ) {
+		// 			if ( $key >= get_site_option( 'upl_site_rules_count' ) ) {
+		// 				break;
+		// 			}
+		// 			$role_obj = get_role( $role );
+		// 			if ( $role_obj->has_cap( 'create_users' ) && get_site_option( 'add_new_users' ) ) {
+		// 				echo '<div id="message" class="notice notice-warning is-dismissible"><p>' . __( 'Limits can not be applied on users that have the capability', 'subscriber-posts-limit' ) . ": create_users. $role" . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
+		// 			} elseif ( $role_obj->has_cap( 'edit_others_pages' ) || $role_obj->has_cap( 'edit_others_posts' ) ) {
+		// 				echo '<div id="message" class="notice notice-info is-dismissible"><p>' . __( 'To prevent bypassing the limits make sure the users do not have the capability to modify posts of others in the selected post type', 'subscriber-posts-limit' ) . '. #' . ( $key + 1 ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
+		// 			}
+		// 		}
+		// 	}
+		// 	echo '<div id="message" class="updated notice is-dismissible"><p>' . __( 'Settings updated.' ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
+		// }
 	}
 
 	/**
