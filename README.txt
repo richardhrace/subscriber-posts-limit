@@ -1,4 +1,4 @@
-=== User Posts Limit ===
+=== Subscriber Posts Limit ===
 Contributors: condless
 Tags: limit, post, user, role
 Requires at least: 5.2
@@ -14,7 +14,7 @@ Limit the number of posts user can create. Any post type.
 
 Limit the number of posts user can create. Any post type.
 
-[Documentation](https://en.condless.com/user-posts-limit/)
+[Documentation](https://en.condless.com/subscriber-posts-limit/)
 
 = How To Use =
 1. Plugin Settings: Select role, post type, limit, and cycle.
@@ -46,7 +46,7 @@ PHP 7.0 or greater
 1. Click on Install Now button and the Activate Plugin
 
 == Screenshots ==
-1. User Posts Limit Plugin Settings
+1. Subscriber Posts Limit Plugin Settings
 1. Post creation limit notification
 
 == Frequently Asked Questions ==

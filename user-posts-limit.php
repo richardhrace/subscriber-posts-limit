@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Plugin Name: User Posts Limit
- * Plugin URI: https://en.condless.com/user-posts-limit/
+ * Plugin Name: Subscriber Posts Limit
+ * Plugin URI: https://en.condless.com/subscriber-posts-limit/
  * Description: Limit the number of posts user can create. Any post type.
  * Version: 1.0.6
- * Author: Condless
+ * Author: Richard Race
  * Author URI: https://www.condless.com/
  * Developer: Condless
  * Developer URI: https://www.condless.com/
  * Contributors: condless
- * Text Domain: user-posts-limit
+ * Text Domain: subscriber-posts-limit
  * Domain Path: /i18n/languages
  * License: GPLv2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -25,7 +25,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * User Posts Limit Class.
+ * Subscriber Posts Limit Class.
  */
 class WP_UPL {
 
@@ -51,7 +51,7 @@ class WP_UPL {
 	 * Loads text domain for internationalitation
 	 */
 	public function init_textdomain() {
-		load_plugin_textdomain( 'user-posts-limit', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages' );
+		load_plugin_textdomain( 'subscriber-posts-limit', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages' );
 	}
 
 	/**
@@ -109,7 +109,7 @@ class WP_UPL {
 	public function wp_add_plugin_links( $links_array, $plugin_file_name, $plugin_data, $status ) {
 		if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ) {
 			$sub_domain = 'he_IL' === get_locale() ? 'www' : 'en';
-			$links_array[] = "<a href=https://$sub_domain.condless.com/user-posts-limit/>" . __( 'Documentation' ) . '</a>';
+			$links_array[] = "<a href=https://$sub_domain.condless.com/subscriber-posts-limit/>" . __( 'Documentation' ) . '</a>';
 			$links_array[] = "<a href=https://$sub_domain.condless.com/contact/>" . _x( 'Contact', 'Theme starter content' ) . '</a>';
 		}
 		return $links_array;
@@ -120,7 +120,7 @@ class WP_UPL {
 	 */
 	public function wp_register_settings() {
 		add_option( 'upl_rules_count', '1' );
-		add_option( 'upl_message', __( 'Posts limit exceeded', 'user-posts-limit' ) . ' (' . __( 'Delete permanently' ) . ': {extra_posts} {type})' );
+		add_option( 'upl_message', __( 'Posts limit exceeded', 'subscriber-posts-limit' ) . ' (' . __( 'Delete permanently' ) . ': {extra_posts} {type})' );
 		add_option( 'upl_notice', WP_DEBUG && true === WP_DEBUG ? 'Fullscreen' : 'embed' );
 		add_option( 'upl_priority', 'permissive' );
 		add_option( 'upl_manage_cap', 'manage_options' );
@@ -145,7 +145,7 @@ class WP_UPL {
 	 * Registers options page
 	 */
 	public function wp_register_options_page() {
-		add_options_page( 'Posts Limit', __( 'Posts Limit', 'user-posts-limit' ), get_option( 'upl_manage_cap', 'manage_options' ), 'posts-limit', [ $this, 'upl_options_page' ] );
+		add_options_page( 'Posts Limit', __( 'Posts Limit', 'subscriber-posts-limit' ), get_option( 'upl_manage_cap', 'manage_options' ), 'posts-limit', [ $this, 'upl_options_page' ] );
 	}
 
 	/**
@@ -154,39 +154,39 @@ class WP_UPL {
 	public function upl_options_page()
 	{
 		if ( has_filter( 'upl_query' ) ) {
-			echo '<div id="message" class="notice notice-info is-dismissible"><p>' . esc_attr__( 'Some rules were modified by code, contact your developer to make changes when required', 'user-posts-limit' ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
+			echo '<div id="message" class="notice notice-info is-dismissible"><p>' . esc_attr__( 'Some rules were modified by code, contact your developer to make changes when required', 'subscriber-posts-limit' ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
 		}
 		?>
 		<div>
-			<h2><?php esc_html_e( 'User Posts Limit', 'user-posts-limit' ); echo " "; esc_html_e( 'Settings' ); ?></h2>
+			<h2><?php esc_html_e( 'Subscriber Posts Limit', 'subscriber-posts-limit' ); echo " "; esc_html_e( 'Settings' ); ?></h2>
 			<form method="post" action="options.php">
 			<?php settings_fields( 'upl_options_group' ); ?>
 			<table>
 				<tr valign="top">
-					<th><label title="<?php esc_html_e( 'Set how many rules to apply', 'user-posts-limit' ); ?>" for="upl_rules_count"><?php esc_html_e( 'Rules', 'user-posts-limit' ); ?></label></th>
+					<th><label title="<?php esc_html_e( 'Set how many rules to apply', 'subscriber-posts-limit' ); ?>" for="upl_rules_count"><?php esc_html_e( 'Rules', 'subscriber-posts-limit' ); ?></label></th>
 					<td><input type="number" min="0" max="99" id="upl_rules_count" name="upl_rules_count" value="<?php echo get_option( 'upl_rules_count' ); ?>" /></td>
 				</tr>
 				<tr valign="top">
-					<th><label title="<?php esc_html_e( 'Set the message which will be displayed when posts limit exceeded', 'user-posts-limit' ); echo '. {extra_posts} {limit} {count} {type}'; ?>" for="upl_message"><?php esc_html_e( 'text' ); ?></label></th>
+					<th><label title="<?php esc_html_e( 'Set the message which will be displayed when posts limit exceeded', 'subscriber-posts-limit' ); echo '. {extra_posts} {limit} {count} {type}'; ?>" for="upl_message"><?php esc_html_e( 'text' ); ?></label></th>
 					<td><input type="text" id="upl_message" name="upl_message" value="<?php echo esc_html( get_option( 'upl_message' ) ); ?>" /></td>
 				</tr>
 				<tr valign="top">
-					<th><label title="<?php esc_html_e( 'Set the type of notification when posts limit exceeded', 'user-posts-limit' ); echo '. '; esc_html_e( 'embed' ); echo ': '; esc_html_e( 'Compatible also with frontend forms', 'user-posts-limit' ); echo '. '; esc_html_e( 'Fullscreen' ); echo ': '; esc_html_e( 'Use to display the limit expiration date in the posts limit message (while using the cycle option) or if the warning does not displayed as expected', 'user-posts-limit' ); echo '. '; esc_html_e( 'Redirect' ); echo ': '; esc_html_e( 'Use the text option to set the redirection path', 'user-posts-limit' ); echo '.'; ?>" for="upl_notice"><?php esc_html_e( 'Notifications' ); ?></label></th>
+					<th><label title="<?php esc_html_e( 'Set the type of notification when posts limit exceeded', 'subscriber-posts-limit' ); echo '. '; esc_html_e( 'embed' ); echo ': '; esc_html_e( 'Compatible also with frontend forms', 'subscriber-posts-limit' ); echo '. '; esc_html_e( 'Fullscreen' ); echo ': '; esc_html_e( 'Use to display the limit expiration date in the posts limit message (while using the cycle option) or if the warning does not displayed as expected', 'subscriber-posts-limit' ); echo '. '; esc_html_e( 'Redirect' ); echo ': '; esc_html_e( 'Use the text option to set the redirection path', 'subscriber-posts-limit' ); echo '.'; ?>" for="upl_notice"><?php esc_html_e( 'Notifications' ); ?></label></th>
 					<td><select id="upl_notice" name="upl_notice">
 						<option value="embed"<?php selected( get_option( 'upl_notice' ), 'embed' ); ?>><?php esc_html_e( 'embed' ); ?></option>
 						<option value="Fullscreen"<?php selected( get_option( 'upl_notice' ), 'Fullscreen' ); ?>><?php esc_html_e( 'Fullscreen' ); ?></option>
-						<option value="redirect"<?php selected( get_option( 'upl_notice' ), 'redirect' ); ?>><?php esc_html_e( 'Redirect', 'user-posts-limit' ); ?></option>
+						<option value="redirect"<?php selected( get_option( 'upl_notice' ), 'redirect' ); ?>><?php esc_html_e( 'Redirect', 'subscriber-posts-limit' ); ?></option>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th><label title="<?php esc_html_e( 'Permissive' ); echo ': '; esc_html_e( 'Limit when all of the user relevant rules were passed', 'user-posts-limit' ); echo '. '; esc_html_e( 'Restrictive' ); echo ': '; esc_html_e( 'Limit when any of the user relevant rules was passed', 'user-posts-limit' ); echo '. '; esc_html_e( 'For more accurate messsage data when multiple rules applied on the same user & post type, put the strictest rules at the bottom in Permissive and at the top for Restrictive', 'user-posts-limit' ); echo '.'; ?>" for="upl_priority"><?php esc_html_e( 'Priority' ); ?></label></th>
+					<th><label title="<?php esc_html_e( 'Permissive' ); echo ': '; esc_html_e( 'Limit when all of the user relevant rules were passed', 'subscriber-posts-limit' ); echo '. '; esc_html_e( 'Restrictive' ); echo ': '; esc_html_e( 'Limit when any of the user relevant rules was passed', 'subscriber-posts-limit' ); echo '. '; esc_html_e( 'For more accurate messsage data when multiple rules applied on the same user & post type, put the strictest rules at the bottom in Permissive and at the top for Restrictive', 'subscriber-posts-limit' ); echo '.'; ?>" for="upl_priority"><?php esc_html_e( 'Priority' ); ?></label></th>
 					<td><select id="upl_priority" name="upl_priority">
 						<option value="permissive"<?php selected( get_option( 'upl_priority' ), 'permissive' ); ?>><?php esc_html_e( 'Permissive' ); ?></option>
 						<option value="restrictive"<?php selected( get_option( 'upl_priority' ), 'restrictive' ); ?>><?php esc_html_e( 'Restrictive' ); ?></option>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th><label title="<?php esc_html_e( 'You can choose a capability which besides manage_options will be required in order to manage this plugin. Limiting users that have the manage_options capability will be possible but they will be able to bypass it by creating/promoting users or edit the code.', 'user-posts-limit' ); ?>" for="upl_manage_cap"><?php esc_html_e( 'Plugin Management Capability' ); ?></label></th>
+					<th><label title="<?php esc_html_e( 'You can choose a capability which besides manage_options will be required in order to manage this plugin. Limiting users that have the manage_options capability will be possible but they will be able to bypass it by creating/promoting users or edit the code.', 'subscriber-posts-limit' ); ?>" for="upl_manage_cap"><?php esc_html_e( 'Plugin Management Capability' ); ?></label></th>
 					<td><select id="upl_manage_cap" name="upl_manage_cap">
 						<?php foreach ( [ 'manage_options', 'edit_plugins', 'edit_themes', 'delete_plugins', 'create_users', 'promote_users' ] as $cap ) :
 							if ( current_user_can( $cap ) ) : ?>
@@ -196,17 +196,17 @@ class WP_UPL {
 					</td>
 				</tr>
 				<tr valign="top">
-					<th><label title="<?php esc_html_e( 'Display the limits per user in the users list table', 'user-posts-limit' ); ?>" for="upl_stats"><?php esc_html_e( 'Document Statistics' ); ?></label></th>
+					<th><label title="<?php esc_html_e( 'Display the limits per user in the users list table', 'subscriber-posts-limit' ); ?>" for="upl_stats"><?php esc_html_e( 'Document Statistics' ); ?></label></th>
 					<td><input type="checkbox" id="upl_stats" name="upl_stats" value="1" <?php checked( 1, get_option( 'upl_stats' ), true ); ?> /></td>
 				</tr>
 				<?php for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) : ?>
 					<th><h2><?php echo '#'; echo $i+1; ?></h2></th>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'The user role to limit', 'user-posts-limit' ); ?>" for="upl_user_role[<?php echo $i; ?>]"><?php esc_html_e( 'Role' ); ?></label></th>
+						<th><label title="<?php esc_html_e( 'The user role to limit', 'subscriber-posts-limit' ); ?>" for="upl_user_role[<?php echo $i; ?>]"><?php esc_html_e( 'Role' ); ?></label></th>
 						<td><select id="upl_user_role[<?php echo $i; ?>]" name="upl_user_role[<?php echo $i; ?>]"><?php wp_dropdown_roles( isset( get_option( 'upl_user_role' )[ $i ] ) ? get_option( 'upl_user_role' )[ $i ] : '' ); ?></select></td>
 					</tr>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'The type of the posts to limit', 'user-posts-limit' ); ?>" for="upl_posts_type[<?php echo $i; ?>]"><?php esc_html_e( 'Type' ); ?></label></th>
+						<th><label title="<?php esc_html_e( 'The type of the posts to limit', 'subscriber-posts-limit' ); ?>" for="upl_posts_type[<?php echo $i; ?>]"><?php esc_html_e( 'Type' ); ?></label></th>
 						<td><select id="upl_posts_type[<?php echo $i; ?>]" name="upl_posts_type[<?php echo $i; ?>]">
 							<?php foreach( get_post_types( [], 'objects' ) as $post_type_obj ): ?>
 								<option value="<?php echo esc_attr( $post_type_obj->name ); ?>"<?php if ( isset( get_option( 'upl_posts_type' )[ $i ] ) ) selected( get_option( 'upl_posts_type' )[ $i ], $post_type_obj->name ); ?>><?php echo esc_html( $post_type_obj->labels->name ); ?></option>
@@ -214,11 +214,11 @@ class WP_UPL {
 						</select></td>
 					</tr>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'The number of posts allowed', 'user-posts-limit' ); ?>" for="upl_num_limit[<?php echo $i; ?>]"><?php esc_html_e( 'Limit', 'user-posts-limit' ); ?></label></th>
+						<th><label title="<?php esc_html_e( 'The number of posts allowed', 'subscriber-posts-limit' ); ?>" for="upl_num_limit[<?php echo $i; ?>]"><?php esc_html_e( 'Limit', 'subscriber-posts-limit' ); ?></label></th>
 						<td><input type="number" min="0" max="9999" id="upl_num_limit[<?php echo $i; ?>]" name="upl_num_limit[<?php echo $i; ?>]" value="<?php if ( isset( get_option( 'upl_num_limit' )[ $i ] ) ) echo get_option( 'upl_num_limit' )[ $i ]; ?>" /></td>
 					</tr>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'In each what period to reset the count', 'user-posts-limit' ); ?>" for="upl_period[<?php echo $i; ?>]"><?php esc_html_e( 'Cycle', 'user-posts-limit' ); ?></label></th>
+						<th><label title="<?php esc_html_e( 'In each what period to reset the count', 'subscriber-posts-limit' ); ?>" for="upl_period[<?php echo $i; ?>]"><?php esc_html_e( 'Cycle', 'subscriber-posts-limit' ); ?></label></th>
 						<td><select id="upl_period[<?php echo $i; ?>]" name="upl_period[<?php echo $i; ?>]">
 							<option value="1970"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1970' ); ?>><?php esc_html_e( 'None' ); ?></option>
 							<option value="1 year ago"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1 year ago' ); ?>><?php esc_html_e( 'Year' ); ?></option>
@@ -250,14 +250,14 @@ class WP_UPL {
 				$wpmu_role = is_multisite() && 'create_users' !== get_option( 'upl_manage_cap' ) ? '/create_users' : '';
 				if ( 'manage_options' === get_option( 'upl_manage_cap' ) || $role_obj->has_cap( 'create_users' ) && get_site_option( 'add_new_users' ) ) {
 					$input[ $key ] = 'subscriber';
-					add_settings_error( 'upl_user_role', 'upl_user_role', __( 'Limits can not be applied on users that have the capability', 'user-posts-limit' ) . ": manage_options$wpmu_role. #" . ( $key + 1 ) );
+					add_settings_error( 'upl_user_role', 'upl_user_role', __( 'Limits can not be applied on users that have the capability', 'subscriber-posts-limit' ) . ": manage_options$wpmu_role. #" . ( $key + 1 ) );
 					continue;
 				} else {
-					add_settings_error( 'upl_user_role', 'upl_user_role', __( 'The limit will be applied only on users that do not have the Plugin Management Capability', 'user-posts-limit' ) . ' (' . get_option( 'upl_manage_cap' ) . ")$wpmu_role. #" . ( $key + 1 ), 'info' );
+					add_settings_error( 'upl_user_role', 'upl_user_role', __( 'The limit will be applied only on users that do not have the Plugin Management Capability', 'subscriber-posts-limit' ) . ' (' . get_option( 'upl_manage_cap' ) . ")$wpmu_role. #" . ( $key + 1 ), 'info' );
 				}
 			}
 			if ( $role_obj->has_cap( 'edit_others_posts' ) || $role_obj->has_cap( 'edit_others_pages' ) ) {
-				add_settings_error( 'upl_user_role', 'upl_user_role', __( 'To prevent bypassing the limits make sure the users do not have the capability to modify posts of others in the selected post type', 'user-posts-limit' ) . '. #' . ( $key + 1 ), 'info' );
+				add_settings_error( 'upl_user_role', 'upl_user_role', __( 'To prevent bypassing the limits make sure the users do not have the capability to modify posts of others in the selected post type', 'subscriber-posts-limit' ) . '. #' . ( $key + 1 ), 'info' );
 			}
 		}
 		return $input;
@@ -290,7 +290,7 @@ class WP_UPL {
 	 * Adds multisite settings page
 	 */
 	public function wp_admin_menu() {
-		add_submenu_page( 'settings.php', __( 'Posts Limit', 'user-posts-limit' ), __( 'Posts Limit', 'user-posts-limit' ), 'manage_options', 'posts-limit', [ $this, 'upl_network_options_page' ] );
+		add_submenu_page( 'settings.php', __( 'Posts Limit', 'subscriber-posts-limit' ), __( 'Posts Limit', 'subscriber-posts-limit' ), 'manage_options', 'posts-limit', [ $this, 'upl_network_options_page' ] );
 	}
 
 	/**
@@ -298,26 +298,26 @@ class WP_UPL {
 	 */
 	public function upl_network_options_page() {
 		if ( has_filter( 'upl_network_query' ) ) {
-			echo '<div id="message" class="notice notice-info is-dismissible"><p>' . esc_attr__( 'Some rules were modified by code, contact you developer to make changes when required', 'user-posts-limit' ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
+			echo '<div id="message" class="notice notice-info is-dismissible"><p>' . esc_attr__( 'Some rules were modified by code, contact you developer to make changes when required', 'subscriber-posts-limit' ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
 		}
 		?>
 		<div>
-			<h2><?php esc_html_e( 'User Posts Limit', 'user-posts-limit' ); echo " "; esc_html_e( 'Settings' ); ?></h2>
+			<h2><?php esc_html_e( 'Subscriber Posts Limit', 'subscriber-posts-limit' ); echo " "; esc_html_e( 'Settings' ); ?></h2>
 			<form method="post" action="edit.php?action=uplaction">
 			<?php wp_nonce_field( 'upl-validate' ); ?>
 			<table>
 				<tr valign="top">
-					<th><label title="<?php esc_html_e( 'Set how many rules to apply', 'user-posts-limit' ); echo '. '; esc_html_e( 'Network-wide rules are not triggered by the shortcodes and do not appear in the users list / dashbaord', 'user-posts-limit' ); echo '.'; ?>" for="upl_site_rules_count"><?php esc_html_e( 'Rules', 'user-posts-limit' ); ?></label></th>
+					<th><label title="<?php esc_html_e( 'Set how many rules to apply', 'subscriber-posts-limit' ); echo '. '; esc_html_e( 'Network-wide rules are not triggered by the shortcodes and do not appear in the users list / dashbaord', 'subscriber-posts-limit' ); echo '.'; ?>" for="upl_site_rules_count"><?php esc_html_e( 'Rules', 'subscriber-posts-limit' ); ?></label></th>
 					<td><input type="number" min="0" max="99" id="upl_site_rules_count" name="upl_site_rules_count" value="<?php echo get_site_option( 'upl_site_rules_count' ); ?>" /></td>
 				</tr>
 				<?php for ( $i = 0; $i < get_site_option( 'upl_site_rules_count' ); $i++ ) : ?>
 					<th><h2><?php echo '#'; echo $i+1; ?></h2></th>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'The user role to limit', 'user-posts-limit' ); ?>" for="upl_site_user_role[<?php echo $i; ?>]"><?php esc_html_e( 'Role' ); ?></label></th>
+						<th><label title="<?php esc_html_e( 'The user role to limit', 'subscriber-posts-limit' ); ?>" for="upl_site_user_role[<?php echo $i; ?>]"><?php esc_html_e( 'Role' ); ?></label></th>
 						<td><select id="upl_site_user_role[<?php echo $i; ?>]" name="upl_site_user_role[<?php echo $i; ?>]"><?php wp_dropdown_roles( isset( get_site_option( 'upl_site_user_role' )[ $i ] ) ? get_site_option( 'upl_site_user_role' )[ $i ] : '' ); ?></select></td>
 					</tr>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'The type of the posts to limit', 'user-posts-limit' ); ?>" for="upl_site_posts_type[<?php echo $i; ?>]"><?php esc_html_e( 'Type' ); ?></label></th>
+						<th><label title="<?php esc_html_e( 'The type of the posts to limit', 'subscriber-posts-limit' ); ?>" for="upl_site_posts_type[<?php echo $i; ?>]"><?php esc_html_e( 'Type' ); ?></label></th>
 						<td><select id="upl_site_posts_type[<?php echo $i; ?>]" name="upl_site_posts_type[<?php echo $i; ?>]">
 							<?php foreach( get_post_types( [], 'objects' ) as $post_type_obj ): ?>
 								<option value="<?php echo esc_attr( $post_type_obj->name ); ?>"<?php if ( isset( get_site_option( 'upl_site_posts_type' )[ $i ] ) ) selected( get_site_option( 'upl_site_posts_type' )[ $i ], $post_type_obj->name ); ?>><?php echo esc_html( $post_type_obj->labels->name ); ?></option>
@@ -325,11 +325,11 @@ class WP_UPL {
 						</select></td>
 					</tr>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'The number of posts allowed', 'user-posts-limit' ); ?>" for="upl_site_num_limit[<?php echo $i; ?>]"><?php esc_html_e( 'Limit', 'user-posts-limit' ); ?></label></th>
+						<th><label title="<?php esc_html_e( 'The number of posts allowed', 'subscriber-posts-limit' ); ?>" for="upl_site_num_limit[<?php echo $i; ?>]"><?php esc_html_e( 'Limit', 'subscriber-posts-limit' ); ?></label></th>
 						<td><input type="number" min="0" max="9999" id="upl_site_num_limit[<?php echo $i; ?>]" name="upl_site_num_limit[<?php echo $i; ?>]" value="<?php if ( isset( get_site_option( 'upl_site_num_limit' )[ $i ] ) ) echo get_site_option( 'upl_site_num_limit' )[ $i ]; ?>" /></td>
 					</tr>
 					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'In each what period to reset the count', 'user-posts-limit' ); ?>" for="upl_site_period[<?php echo $i; ?>]"><?php esc_html_e( 'Cycle', 'user-posts-limit' ); ?></label></th>
+						<th><label title="<?php esc_html_e( 'In each what period to reset the count', 'subscriber-posts-limit' ); ?>" for="upl_site_period[<?php echo $i; ?>]"><?php esc_html_e( 'Cycle', 'subscriber-posts-limit' ); ?></label></th>
 						<td><select id="upl_site_period[<?php echo $i; ?>]" name="upl_site_period[<?php echo $i; ?>]">
 							<option value="1970"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1970' ); ?>><?php esc_html_e( 'None' ); ?></option>
 							<option value="1 year ago"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1 year ago' ); ?>><?php esc_html_e( 'Year' ); ?></option>
@@ -376,9 +376,9 @@ class WP_UPL {
 					}
 					$role_obj = get_role( $role );
 					if ( $role_obj->has_cap( 'create_users' ) && get_site_option( 'add_new_users' ) ) {
-						echo '<div id="message" class="notice notice-warning is-dismissible"><p>' . __( 'Limits can not be applied on users that have the capability', 'user-posts-limit' ) . ": create_users. $role" . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
+						echo '<div id="message" class="notice notice-warning is-dismissible"><p>' . __( 'Limits can not be applied on users that have the capability', 'subscriber-posts-limit' ) . ": create_users. $role" . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
 					} elseif ( $role_obj->has_cap( 'edit_others_pages' ) || $role_obj->has_cap( 'edit_others_posts' ) ) {
-						echo '<div id="message" class="notice notice-info is-dismissible"><p>' . __( 'To prevent bypassing the limits make sure the users do not have the capability to modify posts of others in the selected post type', 'user-posts-limit' ) . '. #' . ( $key + 1 ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
+						echo '<div id="message" class="notice notice-info is-dismissible"><p>' . __( 'To prevent bypassing the limits make sure the users do not have the capability to modify posts of others in the selected post type', 'subscriber-posts-limit' ) . '. #' . ( $key + 1 ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
 					}
 				}
 			}
@@ -433,7 +433,7 @@ class WP_UPL {
 						if ( 0 <= $upl_query->found_posts - get_site_option( 'upl_site_num_limit' )[ $i ] ) {
 							do_action( 'upl_network_limit_applied', $postarr );
 							add_action( 'admin_notices', function() {
-								?><div class="error"><p><?php esc_html_e( 'Network Admin' ); echo ': '; esc_html_e( 'Posts limit exceeded', 'user-posts-limit' ); ?></p></div><?php
+								?><div class="error"><p><?php esc_html_e( 'Network Admin' ); echo ': '; esc_html_e( 'Posts limit exceeded', 'subscriber-posts-limit' ); ?></p></div><?php
 							} );
 							return true;
 						}
@@ -556,7 +556,7 @@ class WP_UPL {
 	}
 
 	/**
-	 * Adds shortcode that displays the current user posts limit
+	 * Adds shortcode that displays the current Subscriber Posts Limit
 	 * @param mixed $atts
 	 * @return mixed
 	 */
@@ -578,7 +578,7 @@ class WP_UPL {
 	 * Creates dashboard widget
 	 */
 	public function upl_dashboard_widgets() {
-		wp_add_dashboard_widget( 'upl_limits_widget', __( 'Posts Limit', 'user-posts-limit' ), [ $this, 'upl_limits_dashboard_widget' ] );
+		wp_add_dashboard_widget( 'upl_limits_widget', __( 'Posts Limit', 'subscriber-posts-limit' ), [ $this, 'upl_limits_dashboard_widget' ] );
 	}
 
 	/**
@@ -591,7 +591,7 @@ class WP_UPL {
 				echo '<span style=color:' . ( $count < get_option( 'upl_num_limit' )[ $i ] ? '' : 'coral' ) . '>' . get_post_type_object( get_option( 'upl_posts_type' )[ $i ] )->labels->name . ' ' . $count . ' / ' . get_option( 'upl_num_limit' )[ $i ] . '. </span>';
 			}
 		} else {
-			esc_attr_e( 'Unlimited', 'user-posts-limit' );
+			esc_attr_e( 'Unlimited', 'subscriber-posts-limit' );
 		}
 	}
 
@@ -603,7 +603,7 @@ class WP_UPL {
 	public function wp_modify_user_table( $columns ) {
 		for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) {
 			if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] ) {
-				$columns[ "rule$i" ] = get_post_type_object( get_option( 'upl_posts_type' )[ $i ] )->labels->name . ' ' . __( 'Limit', 'user-posts-limit' );
+				$columns[ "rule$i" ] = get_post_type_object( get_option( 'upl_posts_type' )[ $i ] )->labels->name . ' ' . __( 'Limit', 'subscriber-posts-limit' );
 			}
 		}
 		return $columns;
@@ -629,7 +629,7 @@ class WP_UPL {
 	}
 
 	/**
-	 * Checks the current user posts limits
+	 * Checks the current Subscriber Posts Limits
 	 * @return mixed
 	 */
 	public function current_user_limits() {
