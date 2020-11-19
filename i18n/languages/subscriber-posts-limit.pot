@@ -1,9 +1,9 @@
 # Copyright (C) 2020 Condless
-# This file is distributed under the same license as the Subscriber Posts Limit plugin.
+# This file is distributed under the same license as the Subscriber Subscription Posts Limit plugin.
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Subscriber Posts Limit 1.0.1\n"
+"Project-Id-Version: Subscriber Subscription Posts Limit 1.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/subscriber-posts-limit\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Condless <info@condless.com>\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #. Plugin Name of the plugin
 #: subscriber-posts-limit.php:137
-msgid "Subscriber Posts Limit"
+msgid "Subscriber Subscription Posts Limit"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -43,7 +43,7 @@ msgstr ""
 
 #: subscriber-posts-limit.php:127
 msgctxt "plugin"
-msgid "Posts Limit"
+msgid "Subscription Posts Limit"
 msgstr ""
 
 #: subscriber-posts-limit.php:142

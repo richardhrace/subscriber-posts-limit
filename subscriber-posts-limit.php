@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: Subscriber Posts Limit
+ * Plugin Name: Subscriber Subscription Posts Limit
  * Plugin URI: https://en.condless.com/subscriber-posts-limit/
  * Description: Limit the number of posts user can create. Any post type.
  * Version: 1.0.6
@@ -25,7 +25,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Subscriber Posts Limit Class.
+ * Subscriber Subscription Posts Limit Class.
  */
 class WP_UPL {
 
@@ -135,7 +135,7 @@ class WP_UPL {
 		register_setting( 'upl_options_group', 'upl_priority', 'sanitize_text_field' );
 		register_setting( 'upl_options_group', 'upl_manage_cap', 'sanitize_text_field' );
 		register_setting( 'upl_options_group', 'upl_stats', 'sanitize_text_field' );
-		register_setting( 'upl_options_group', 'upl_subscriber_plan', [ $this, 'upl_sanitize_role' ] );
+		register_setting( 'upl_options_group', 'upl_subscriber_plan', [ $this, 'upl_sanitize_plan' ] );
 		register_setting( 'upl_options_group', 'upl_posts_type' );
 		register_setting( 'upl_options_group', 'upl_num_limit' );
 		register_setting( 'upl_options_group', 'upl_period' );
@@ -145,7 +145,7 @@ class WP_UPL {
 	 * Registers options page
 	 */
 	public function wp_register_options_page() {
-		add_options_page( 'Posts Limit', __( 'Posts Limit', 'subscriber-posts-limit' ), get_option( 'upl_manage_cap', 'manage_options' ), 'posts-limit', [ $this, 'upl_options_page' ] );
+		add_options_page( 'Subscription Posts Limit', __( 'Subscription Posts Limit', 'subscriber-posts-limit' ), get_option( 'upl_manage_cap', 'manage_options' ), 'posts-limit', [ $this, 'upl_options_page' ] );
 	}
 
 	/**
@@ -162,7 +162,7 @@ class WP_UPL {
 		}
 		?>
 		<div>
-			<h2><?php esc_html_e( 'Subscriber Posts Limit', 'subscriber-posts-limit' ); echo " "; esc_html_e( 'Settings' ); ?></h2>
+			<h2><?php esc_html_e( 'Subscriber Subscription Posts Limit', 'subscriber-posts-limit' ); echo " "; esc_html_e( 'Settings' ); ?></h2>
 			<form method="post" action="options.php">
 			<?php settings_fields( 'upl_options_group' ); ?>
 			<table>
@@ -260,7 +260,7 @@ class WP_UPL {
 	 * @param mixed $input
 	 * @return mixed
 	 */
-	public function upl_sanitize_role( $input ) {
+	public function upl_sanitize_plan( $input ) {
 		foreach( $input as $key => $role ) {
 			if ( $key >= get_option( 'upl_rules_count' ) ) {
 				break;
@@ -310,7 +310,7 @@ class WP_UPL {
 	 * Adds multisite settings page
 	 */
 	public function wp_admin_menu() {
-		add_submenu_page( 'settings.php', __( 'Posts Limit', 'subscriber-posts-limit' ), __( 'Posts Limit', 'subscriber-posts-limit' ), 'manage_options', 'posts-limit', [ $this, 'upl_network_options_page' ] );
+		add_submenu_page( 'settings.php', __( 'Subscription Posts Limit', 'subscriber-posts-limit' ), __( 'Subscription Posts Limit', 'subscriber-posts-limit' ), 'manage_options', 'posts-limit', [ $this, 'upl_network_options_page' ] );
 	}
 
 	/**
@@ -326,7 +326,7 @@ class WP_UPL {
 		}
 		?>
 		<div>
-			<h2><?php esc_html_e( 'Subscriber Posts Limit', 'subscriber-posts-limit' ); echo " "; esc_html_e( 'Settings' ); ?></h2>
+			<h2><?php esc_html_e( 'Subscriber Subscription Posts Limit', 'subscriber-posts-limit' ); echo " "; esc_html_e( 'Settings' ); ?></h2>
 			<form method="post" action="edit.php?action=uplaction">
 			<?php wp_nonce_field( 'upl-validate' ); ?>
 			<table>
@@ -596,7 +596,7 @@ class WP_UPL {
 	}
 
 	/**
-	 * Adds shortcode that displays the current Subscriber Posts Limit
+	 * Adds shortcode that displays the current Subscriber Subscription Posts Limit
 	 * @param mixed $atts
 	 * @return mixed
 	 */
@@ -618,7 +618,7 @@ class WP_UPL {
 	 * Creates dashboard widget
 	 */
 	public function upl_dashboard_widgets() {
-		wp_add_dashboard_widget( 'upl_limits_widget', __( 'Posts Limit', 'subscriber-posts-limit' ), [ $this, 'upl_limits_dashboard_widget' ] );
+		wp_add_dashboard_widget( 'upl_limits_widget', __( 'Subscription Posts Limit', 'subscriber-posts-limit' ), [ $this, 'upl_limits_dashboard_widget' ] );
 	}
 
 	/**

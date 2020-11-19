@@ -1,4 +1,4 @@
-=== Subscriber Posts Limit ===
+=== Subscriber Subscription Posts Limit ===
 Contributors: condless
 Tags: limit, post, user, role
 Requires at least: 5.2
@@ -46,7 +46,7 @@ PHP 7.0 or greater
 1. Click on Install Now button and the Activate Plugin
 
 == Screenshots ==
-1. Subscriber Posts Limit Plugin Settings
+1. Subscriber Subscription Posts Limit Plugin Settings
 1. Post creation limit notification
 
 == Frequently Asked Questions ==
