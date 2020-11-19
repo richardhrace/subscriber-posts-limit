@@ -1,0 +1,93 @@
+# Copyright (C) 2020 Condless
+# This file is distributed under the same license as the User Posts Limit plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: User Posts Limit 1.0.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-posts-limit\n"
+"Language-Team: Condless <info@condless.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-07-26 16:23+0300\n"
+"PO-Revision-Date: 2020-07-26 16:25+0300\n"
+"X-Generator: Poedit 2.3.1\n"
+"X-Domain: user-posts-limit\n"
+"Last-Translator: Condless <info@condless.com>\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? 2 : 3);\n"
+"Language: he_IL\n"
+
+#. Plugin Name of the plugin
+#: user-posts-limit.php:137
+msgid "User Posts Limit"
+msgstr "הגבלת פוסטים למשתמש"
+
+#. Plugin URI of the plugin
+msgid "https://en.condless.com/user-posts-limit/"
+msgstr "https://www.condless.com/user-posts-limit/"
+
+#. Description of the plugin
+msgid "Limit the number of posts user can create. Any post type."
+msgstr "הגבל את מספר הפוסטים שמשתמש יכול ליצור. כל סוג פוסט."
+
+#. Author of the plugin
+msgid "Condless"
+msgstr "Condless"
+
+#. Author URI of the plugin
+msgid "https://www.condless.com/"
+msgstr "https://www.condless.com/"
+
+#: user-posts-limit.php:84 user-posts-limit.php:97
+msgctxt "plugin"
+msgid "Posts limit exceeded"
+msgstr "חריגה מהגבלת הפוסטים"
+
+#: user-posts-limit.php:127
+msgctxt "plugin"
+msgid "Posts Limit"
+msgstr "הגבלת פוסטים"
+
+#: user-posts-limit.php:142
+msgctxt "plugin"
+msgid "Set how many rules to apply"
+msgstr "קבע את מספר החוקים"
+
+#: user-posts-limit.php:142
+msgctxt "plugin"
+msgid "Rules"
+msgstr "חוקים"
+
+#: user-posts-limit.php:146
+msgctxt "plugin"
+msgid "Use if the warning does not displayed as exptected when posts limit exceeded"
+msgstr "השתמש אם האזהרה אינה מוצגת כמצופה כשישנה חריגה מהגבלת הפוסטים"
+
+#: user-posts-limit.php:154
+msgctxt "plugin"
+msgid "The user role to limit"
+msgstr "תפקיד המשתמש אותו להגביל"
+
+#: user-posts-limit.php:158
+msgctxt "plugin"
+msgid "The type of the posts to limit"
+msgstr "סוג הפוסט אותו להגביל"
+
+#: user-posts-limit.php:166
+msgctxt "plugin"
+msgid "The number of posts allowed"
+msgstr "מספר הפוסטים המותר"
+
+#: user-posts-limit.php:166
+msgctxt "plugin"
+msgid "Limit"
+msgstr "הגבלה"
+
+#: user-posts-limit.php:170
+msgctxt "plugin"
+msgid "In each what period to reset the counter"
+msgstr "בכל איזו תקופה לאפס את הספירה"
+
+#: user-posts-limit.php:170
+msgctxt "plugin"
+msgid "Cycle"
+msgstr "מחזוריות"

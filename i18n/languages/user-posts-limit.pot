@@ -1,0 +1,92 @@
+# Copyright (C) 2020 Condless
+# This file is distributed under the same license as the User Posts Limit plugin.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: User Posts Limit 1.0.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/user-posts-limit\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Condless <info@condless.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-07-26 16:23+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: Poedit 2.3.1\n"
+"X-Domain: user-posts-limit\n"
+
+#. Plugin Name of the plugin
+#: user-posts-limit.php:137
+msgid "User Posts Limit"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://en.condless.com/user-posts-limit/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Limit the number of posts user can create. Any post type."
+msgstr ""
+
+#. Author of the plugin
+msgid "Condless"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.condless.com/"
+msgstr ""
+
+#: user-posts-limit.php:84 user-posts-limit.php:97
+msgctxt "plugin"
+msgid "Posts limit exceeded"
+msgstr ""
+
+#: user-posts-limit.php:127
+msgctxt "plugin"
+msgid "Posts Limit"
+msgstr ""
+
+#: user-posts-limit.php:142
+msgctxt "plugin"
+msgid "Set how many rules to apply"
+msgstr ""
+
+#: user-posts-limit.php:142
+msgctxt "plugin"
+msgid "Rules"
+msgstr ""
+
+#: user-posts-limit.php:146
+msgctxt "plugin"
+msgid "Use if the warning does not displayed as exptected when posts limit exceeded"
+msgstr ""
+
+#: user-posts-limit.php:154
+msgctxt "plugin"
+msgid "The user role to limit"
+msgstr ""
+
+#: user-posts-limit.php:158
+msgctxt "plugin"
+msgid "The type of the posts to limit"
+msgstr ""
+
+#: user-posts-limit.php:166
+msgctxt "plugin"
+msgid "The number of posts allowed"
+msgstr ""
+
+#: user-posts-limit.php:166
+msgctxt "plugin"
+msgid "Limit"
+msgstr ""
+
+#: user-posts-limit.php:170
+msgctxt "plugin"
+msgid "In each what period to reset the counter"
+msgstr ""
+
+#: user-posts-limit.php:170
+msgctxt "plugin"
+msgid "Cycle"
+msgstr ""
