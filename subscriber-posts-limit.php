@@ -228,7 +228,7 @@ class WP_UPL {
 					<tr valign="top">
 						<th><label title="<?php esc_html_e( 'The type of the posts to limit', 'subscriber-posts-limit' ); ?>" for="upl_posts_type[<?php echo $i; ?>]"><?php esc_html_e( 'Type' ); ?></label></th>
 						<td><select id="upl_posts_type[<?php echo $i; ?>]" name="upl_posts_type[<?php echo $i; ?>]">
-							<?php foreach( get_post_types( [], 'objects' ) as $post_type_obj ): ?>
+							<?php foreach( get_post_types( [ 'name' => 'post' ], 'objects' ) as $post_type_obj ): ?>
 								<option value="<?php echo esc_attr( $post_type_obj->name ); ?>"<?php if ( isset( get_option( 'upl_posts_type' )[ $i ] ) ) selected( get_option( 'upl_posts_type' )[ $i ], $post_type_obj->name ); ?>><?php echo esc_html( $post_type_obj->labels->name ); ?></option>
 							<?php endforeach; ?>
 						</select></td>
@@ -361,7 +361,7 @@ class WP_UPL {
 					<tr valign="top">
 						<th><label title="<?php esc_html_e( 'The type of the posts to limit', 'subscriber-posts-limit' ); ?>" for="upl_site_posts_type[<?php echo $i; ?>]"><?php esc_html_e( 'Type' ); ?></label></th>
 						<td><select id="upl_site_posts_type[<?php echo $i; ?>]" name="upl_site_posts_type[<?php echo $i; ?>]">
-							<?php foreach( get_post_types( [], 'objects' ) as $post_type_obj ): ?>
+							<?php foreach( get_post_types( ['name' => 'post'], 'objects' ) as $post_type_obj ): ?>
 								<option value="<?php echo esc_attr( $post_type_obj->name ); ?>"<?php if ( isset( get_site_option( 'upl_site_posts_type' )[ $i ] ) ) selected( get_site_option( 'upl_site_posts_type' )[ $i ], $post_type_obj->name ); ?>><?php echo esc_html( $post_type_obj->labels->name ); ?></option>
 							<?php endforeach; ?>
 						</select></td>
@@ -463,6 +463,22 @@ class WP_UPL {
 	 */
 	public function wp_limit_post_save( $maybe_empty, $postarr ) {
 		if ( empty( $postarr['ID'] ) && ( ! is_multisite() || is_multisite() && ! current_user_can( 'create_users' ) ) ) {
+			$member =  $postarr['post_author'];
+			$subscription_status = '';
+			if ( function_exists( 'pms_get_member' ) ) {
+				$member = pms_get_member( $member );
+				if( !empty( $member->subscriptions ) ) {
+					if ( count( $member->subscriptions ) == 1 ) {
+						$subscription_status = $member->subscriptions[0]['status'];
+					}
+					else {
+						$subscription_status = '';
+						foreach( $member->subscriptions as $subscription_plan ){
+							$subscription_status .= '<div>'. $subscription_plan['status'] .'</div>';
+						}
+					}
+				}
+			}
 			if ( is_multisite() && get_site_option( 'upl_site_rules_count' ) ) {
 				for ( $i = 0; $i < get_site_option( 'upl_site_rules_count' ); $i++ ) {
 					if ( isset( get_site_option( 'upl_site_num_limit' )[ $i ] ) && '' !== get_site_option( 'upl_site_num_limit' )[ $i ] && get_site_option( 'upl_site_posts_type' )[ $i ] === $postarr['post_type'] && current_user_can( get_site_option( 'upl_site_subscriber_plan' )[ $i ] ) ) {
