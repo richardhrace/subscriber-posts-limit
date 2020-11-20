@@ -214,7 +214,7 @@ class WP_UPL {
 									foreach ( $subscription_plans as $plan => $value ) {
 										$name = $value->name;
 										$r = "";
-										if ( $selected === $plan ) {
+										if ( $selected == $plan ) {
 											$r .= "\n\t<option selected='selected' value='" . esc_attr( $plan ) . "'>$name</option>";
 										} else {
 											$r .= "\n\t<option value='" . esc_attr( $plan ) . "'>$name</option>";
@@ -347,7 +347,7 @@ class WP_UPL {
 									foreach ( $subscription_plans as $plan => $value ) {
 										$name = $value->name;
 										$r = "";
-										if ( $selected === $plan ) {
+										if ( $selected == $plan ) {
 											$r .= "\n\t<option selected='selected' value='" . esc_attr( $plan ) . "'>$name</option>";
 										} else {
 											$r .= "\n\t<option value='" . esc_attr( $plan ) . "'>$name</option>";
