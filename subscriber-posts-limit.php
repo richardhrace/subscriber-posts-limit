@@ -120,7 +120,7 @@ class WP_UPL {
 	 */
 	public function wp_register_settings() {
 		add_option( 'upl_rules_count', '1' );
-		add_option( 'upl_message', __( 'Posts limit exceeded', 'subscriber-posts-limit' ) . ' (' . __( 'Delete permanently' ) . ': {extra_posts} {type})' );
+		add_option( 'upl_message', __( 'Posts limit exceeded', 'subscriber-posts-limit' ) . ' (' . __( 'Please upgrade your subscription plan or delete permantly' ) . ': {extra_posts} {type})' );
 		add_option( 'upl_notice', WP_DEBUG && true === WP_DEBUG ? 'Fullscreen' : 'embed' );
 		add_option( 'upl_priority', 'permissive' );
 		add_option( 'upl_manage_cap', 'manage_options' );
