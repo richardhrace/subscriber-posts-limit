@@ -1,10 +1,10 @@
-# Copyright (C) 2020 Condless
-# This file is distributed under the same license as the Subscriber Subscription Posts Limit plugin.
+# Copyright (C) 2020 RichardDev
+# This file is distributed under the same license as the Subscriber Posts Limit plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Subscriber Subscription Posts Limit 1.0.1\n"
+"Project-Id-Version: Subscriber Posts Limit 1.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/subscriber-posts-limit\n"
-"Language-Team: Condless <info@condless.com>\n"
+"Language-Team: RichardDev <info@richarddev.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,30 +12,30 @@ msgstr ""
 "PO-Revision-Date: 2020-07-26 16:25+0300\n"
 "X-Generator: Poedit 2.3.1\n"
 "X-Domain: subscriber-posts-limit\n"
-"Last-Translator: Condless <info@condless.com>\n"
+"Last-Translator: RichardDev <info@richarddev.com>\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? 2 : 3);\n"
 "Language: he_IL\n"
 
 #. Plugin Name of the plugin
 #: subscriber-posts-limit.php:137
-msgid "Subscriber Subscription Posts Limit"
+msgid "Subscriber Posts Limit"
 msgstr "הגבלת פוסטים למשתמש"
 
 #. Plugin URI of the plugin
-msgid "https://en.condless.com/subscriber-posts-limit/"
-msgstr "https://www.condless.com/subscriber-posts-limit/"
+msgid "https://en.richarddev.com/subscriber-posts-limit/"
+msgstr "https://www.richarddev.com/subscriber-posts-limit/"
 
 #. Description of the plugin
 msgid "Limit the number of posts user can create. Any post type."
 msgstr "הגבל את מספר הפוסטים שמשתמש יכול ליצור. כל סוג פוסט."
 
 #. Author of the plugin
-msgid "Condless"
-msgstr "Condless"
+msgid "RichardDev"
+msgstr "RichardDev"
 
 #. Author URI of the plugin
-msgid "https://www.condless.com/"
-msgstr "https://www.condless.com/"
+msgid "https://www.richarddev.com/"
+msgstr "https://www.richarddev.com/"
 
 #: subscriber-posts-limit.php:84 subscriber-posts-limit.php:97
 msgctxt "plugin"
@@ -44,7 +44,7 @@ msgstr "חריגה מהגבלת הפוסטים"
 
 #: subscriber-posts-limit.php:127
 msgctxt "plugin"
-msgid "Subscription Posts Limit"
+msgid "Subscriber Posts Limit"
 msgstr "הגבלת פוסטים"
 
 #: subscriber-posts-limit.php:142

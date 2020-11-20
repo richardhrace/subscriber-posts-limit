@@ -1,5 +1,5 @@
-=== Subscriber Subscription Posts Limit ===
-Contributors: condless
+=== Subscriber Posts Limit ===
+Contributors: richarddev
 Tags: limit, post, user, role
 Requires at least: 5.2
 Tested up to: 5.5
@@ -14,7 +14,7 @@ Limit the number of posts user can create. Any post type.
 
 Limit the number of posts user can create. Any post type.
 
-[Documentation](https://en.condless.com/subscriber-posts-limit/)
+[Documentation](https://en.richarddev.com/subscriber-posts-limit/)
 
 = How To Use =
 1. Plugin Settings: Select role, post type, limit, and cycle.
@@ -25,7 +25,7 @@ Limit the number of posts user can create. Any post type.
 = Features =
 * **Hide Content**: In order to make some content hidden when posts limit exceeded wrap it with the shortcodes (replace "post" with the post type of the relevant rules): [upl_hide type="post"][/upl_hide]
 * **Multisite**: Network-wide rules can be applied via the Network Admin Dashboard.
-* **[Contact](https://en.condless.com/contact/)** to request new limiting options.
+* **[Contact](https://en.richarddev.com/contact/)** to request new limiting options.
 
 == Installation ==
 
@@ -35,7 +35,7 @@ PHP 7.0 or greater
 
 = Automatic installation =
 1. Go to your Dashboard => Plugins => Add new
-1. In the search form write: Condless
+1. In the search form write: RichardDev
 1. When the search return the result, click on the Install Now button
 
 = Manual Installation =
@@ -46,7 +46,7 @@ PHP 7.0 or greater
 1. Click on Install Now button and the Activate Plugin
 
 == Screenshots ==
-1. Subscriber Subscription Posts Limit Plugin Settings
+1. Subscriber Posts Limit Plugin Settings
 1. Post creation limit notification
 
 == Frequently Asked Questions ==
