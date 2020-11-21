@@ -158,7 +158,7 @@ class WP_UPL {
 		}
 		$subscription_plans = array();
 		if ( function_exists( 'pms_get_subscription_plans' ) ) {
-			$subscription_plans = pms_get_subscription_plans();
+			$subscription_plans = array_reverse( pms_get_subscription_plans() );
 		}
 		?>
 		<div>
@@ -213,11 +213,12 @@ class WP_UPL {
 									$selected = isset( get_option( 'upl_subscriber_plan' )[ $i ] ) ? get_option( 'upl_subscriber_plan' )[ $i ] : '';
 									foreach ( $subscription_plans as $plan => $value ) {
 										$name = $value->name;
+										$id = $value->id;
 										$r = "";
-										if ( $selected == $plan ) {
-											$r .= "\n\t<option selected='selected' value='" . esc_attr( $plan ) . "'>$name</option>";
+										if ( $selected == $id ) {
+											$r .= "\n\t<option selected='selected' value='" . esc_attr( $id ) . "'>$name</option>";
 										} else {
-											$r .= "\n\t<option value='" . esc_attr( $plan ) . "'>$name</option>";
+											$r .= "\n\t<option value='" . esc_attr( $id ) . "'>$name</option>";
 										}
 										echo $r;
 									}
@@ -324,7 +325,7 @@ class WP_UPL {
 		}
 		$subscription_plans = array();
 		if ( function_exists( 'pms_get_subscription_plans' ) ) {
-			$subscription_plans = pms_get_subscription_plans();
+			$subscription_plans = array_reverse( pms_get_subscription_plans() );
 		}
 		?>
 		<div>
@@ -346,11 +347,12 @@ class WP_UPL {
 									$selected = isset( get_option( 'upl_site_subscriber_plan' )[ $i ] ) ? get_option( 'upl_site_subscriber_plan' )[ $i ] : '';
 									foreach ( $subscription_plans as $plan => $value ) {
 										$name = $value->name;
+										$id = $value->id;
 										$r = "";
-										if ( $selected == $plan ) {
-											$r .= "\n\t<option selected='selected' value='" . esc_attr( $plan ) . "'>$name</option>";
+										if ( $selected == $id ) {
+											$r .= "\n\t<option selected='selected' value='" . esc_attr( $id ) . "'>$name</option>";
 										} else {
-											$r .= "\n\t<option value='" . esc_attr( $plan ) . "'>$name</option>";
+											$r .= "\n\t<option value='" . esc_attr( $id ) . "'>$name</option>";
 										}
 										echo $r;
 									}
@@ -465,9 +467,12 @@ class WP_UPL {
 		if ( empty( $postarr['ID'] ) && ( ! is_multisite() || is_multisite() && ! current_user_can( 'create_users' ) ) ) {
 			$member =  $postarr['post_author'];
 			$subscription_status = '';
+			$subscription_plan_id = '';
 			if ( function_exists( 'pms_get_member' ) ) {
 				$member = pms_get_member( $member );
 				if( !empty( $member->subscriptions ) ) {
+					$subscription_plan_id = $member->subscriptions[0]['subscription_plan_id'];
+					echo var_dump($subscription_plan_id);
 					if ( count( $member->subscriptions ) == 1 ) {
 						$subscription_status = $member->subscriptions[0]['status'];
 					}
@@ -481,7 +486,7 @@ class WP_UPL {
 			}
 			if ( is_multisite() && get_site_option( 'upl_site_rules_count' ) ) {
 				for ( $i = 0; $i < get_site_option( 'upl_site_rules_count' ); $i++ ) {
-					if ( isset( get_site_option( 'upl_site_num_limit' )[ $i ] ) && '' !== get_site_option( 'upl_site_num_limit' )[ $i ] && get_site_option( 'upl_site_posts_type' )[ $i ] === $postarr['post_type'] && current_user_can( get_site_option( 'upl_site_subscriber_plan' )[ $i ] ) ) {
+					if ( isset( get_site_option( 'upl_site_num_limit' )[ $i ] ) && '' !== get_site_option( 'upl_site_num_limit' )[ $i ] && get_site_option( 'upl_site_posts_type' )[ $i ] === $postarr['post_type'] && $subscription_plan_id == get_site_option( 'upl_site_subscriber_plan' )[ $i ] ) {
 						$upl_query = new wp_query( apply_filters( 'upl_network_query', [
 							'author'	=> $postarr['post_author'],
 							'post_type'	=> $postarr['post_type'],
@@ -502,7 +507,9 @@ class WP_UPL {
 			if ( ! current_user_can( get_option( 'upl_manage_cap' ) ) ) {
 				$relevant_rule = '';
 				for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) {
-					if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $postarr['post_type'] && current_user_can( get_option( 'upl_subscriber_plan' )[ $i ] ) ) {
+					if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $postarr['post_type'] && $subscription_plan_id == get_option( 'upl_subscriber_plan' )[ $i ] ) {
+						error_log("upl_num_limit");
+						error_log(get_option( 'upl_num_limit' ));
 						$upl_query = new wp_query( apply_filters( 'upl_query', [
 							'orderby'	=> 'date',
 							'order'		=> 'ASC',
@@ -570,9 +577,27 @@ class WP_UPL {
 				'message' => get_option( 'upl_message' ),
 			], $atts, 'upl_hide' );
 			$post_author = get_current_user_id();
+			$subscription_status = '';
+			$subscription_plan_id = '';
+			if ( function_exists( 'pms_get_member' ) ) {
+				$member = pms_get_member( $post_author );
+				if( !empty( $member->subscriptions ) ) {
+					$subscription_plan_id = $member->subscriptions[0]['subscription_plan_id'];
+					echo var_dump($subscription_plan_id);
+					if ( count( $member->subscriptions ) == 1 ) {
+						$subscription_status = $member->subscriptions[0]['status'];
+					}
+					else {
+						$subscription_status = '';
+						foreach( $member->subscriptions as $subscription_plan ){
+							$subscription_status .= '<div>'. $subscription_plan['status'] .'</div>';
+						}
+					}
+				}
+			}
 			$relevant_rule = '';
 			for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) {
-				if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $atts['type'] && current_user_can( get_option( 'upl_subscriber_plan' )[ $i ] ) ) {
+				if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $atts['type'] && $subscription_plan_id == get_option( 'upl_subscriber_plan' )[ $i ] ) {
 					$upl_query = new wp_query( apply_filters( 'upl_query', [
 						'author'	=> $post_author,
 						'post_type'	=> $atts['type'],
@@ -692,11 +717,30 @@ class WP_UPL {
 	 */
 	public function current_user_limits() {
 		$limits = [];
+		$author = get_current_user_id();
 		if ( ! current_user_can( get_option( 'upl_manage_cap' ) ) && ( ! is_multisite() || is_multisite() && ! current_user_can( 'create_users' ) ) ) {
+			$subscription_status = '';
+			$subscription_plan_id = '';
+			if ( function_exists( 'pms_get_member' ) ) {
+				$member = pms_get_member( $author );
+				if( !empty( $member->subscriptions ) ) {
+					$subscription_plan_id = $member->subscriptions[0]['subscription_plan_id'];
+					echo var_dump($subscription_plan_id);
+					if ( count( $member->subscriptions ) == 1 ) {
+						$subscription_status = $member->subscriptions[0]['status'];
+					}
+					else {
+						$subscription_status = '';
+						foreach( $member->subscriptions as $subscription_plan ){
+							$subscription_status .= '<div>'. $subscription_plan['status'] .'</div>';
+						}
+					}
+				}
+			}
 			for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) {
-				if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && current_user_can( get_option( 'upl_subscriber_plan' )[ $i ] ) ) {
+				if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && $subscription_plan_id == get_option( 'upl_subscriber_plan' )[ $i ] ) {
 					$upl_query = new wp_query( apply_filters( 'upl_query', [
-						'author'	=> get_current_user_id(),
+						'author'	=> $author,
 						'post_type'	=> get_option( 'upl_posts_type' )[ $i ],
 						'post_status'	=> [ 'any', 'trash', 'draft' ],
 						'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => get_option( 'upl_period' )[ $i ] ]
