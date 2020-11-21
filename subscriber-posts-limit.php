@@ -120,7 +120,7 @@ class WP_UPL {
 	 */
 	public function wp_register_settings() {
 		add_option( 'upl_rules_count', '1' );
-		add_option( 'upl_message', __( 'Posts limit exceeded', 'subscriber-posts-limit' ) . ' (' . __( 'Please upgrade your subscription plan or delete permantly' ) . ': {extra_posts} {type})' );
+		add_option( 'upl_message', __( 'Posts limit exceeded', 'subscriber-posts-limit' ) . ' (' . __( 'Please upgrade your subscription plan.' ) . ': {extra_posts} {type})' );
 		add_option( 'upl_notice', WP_DEBUG && true === WP_DEBUG ? 'Fullscreen' : 'embed' );
 		add_option( 'upl_priority', 'permissive' );
 		add_option( 'upl_manage_cap', 'manage_options' );
@@ -472,7 +472,6 @@ class WP_UPL {
 				$member = pms_get_member( $member );
 				if( !empty( $member->subscriptions ) ) {
 					$subscription_plan_id = $member->subscriptions[0]['subscription_plan_id'];
-					echo var_dump($subscription_plan_id);
 					if ( count( $member->subscriptions ) == 1 ) {
 						$subscription_status = $member->subscriptions[0]['status'];
 					}
@@ -508,8 +507,6 @@ class WP_UPL {
 				$relevant_rule = '';
 				for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) {
 					if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $postarr['post_type'] && $subscription_plan_id == get_option( 'upl_subscriber_plan' )[ $i ] ) {
-						error_log("upl_num_limit");
-						error_log(get_option( 'upl_num_limit' ));
 						$upl_query = new wp_query( apply_filters( 'upl_query', [
 							'orderby'	=> 'date',
 							'order'		=> 'ASC',
@@ -583,7 +580,6 @@ class WP_UPL {
 				$member = pms_get_member( $post_author );
 				if( !empty( $member->subscriptions ) ) {
 					$subscription_plan_id = $member->subscriptions[0]['subscription_plan_id'];
-					echo var_dump($subscription_plan_id);
 					if ( count( $member->subscriptions ) == 1 ) {
 						$subscription_status = $member->subscriptions[0]['status'];
 					}
@@ -725,7 +721,6 @@ class WP_UPL {
 				$member = pms_get_member( $author );
 				if( !empty( $member->subscriptions ) ) {
 					$subscription_plan_id = $member->subscriptions[0]['subscription_plan_id'];
-					echo var_dump($subscription_plan_id);
 					if ( count( $member->subscriptions ) == 1 ) {
 						$subscription_status = $member->subscriptions[0]['status'];
 					}
