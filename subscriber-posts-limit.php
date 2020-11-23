@@ -457,46 +457,71 @@ class WP_UPL {
 					$subscription_plan_id = $member->subscriptions[0]['subscription_plan_id'];
 				}
 			}
+			$user = wp_get_current_user();
+			$role = $user->roles[0];
 			if ( is_multisite() && get_site_option( 'upl_site_rules_count' ) ) {
-				for ( $i = 0; $i < get_site_option( 'upl_site_rules_count' ); $i++ ) {
-					if ( isset( get_site_option( 'upl_site_num_limit' )[ $i ] ) && '' !== get_site_option( 'upl_site_num_limit' )[ $i ] && get_site_option( 'upl_site_posts_type' )[ $i ] === $postarr['post_type'] && $subscription_plan_id == get_site_option( 'upl_site_subscriber_plan' )[ $i ] ) {
-						$upl_query = new wp_query( apply_filters( 'upl_network_query', [
-							'author'	=> $postarr['post_author'],
-							'post_type'	=> $postarr['post_type'],
-							'post_status'	=> [ 'any', 'trash', 'draft' ],
-							'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => $start_date ]
-						], $i ) );
-						if ( $subscription_status !== 'active' || ( $subscription_status === 'active' && 0 <= $upl_query->found_posts - get_site_option( 'upl_site_num_limit' )[ $i ] ) ) {
-							do_action( 'upl_network_limit_applied', $postarr );
-							add_action( 'admin_notices', function() {
-								?><div class="error"><p><?php esc_html_e( 'Network Admin' ); echo ': '; esc_html_e( 'Posts limit exceeded', 'subscriber-posts-limit' ); ?></p></div><?php
-							} );
-							return true;
+				if ( $role !== 'subscriber' ) {
+					do_action( 'upl_network_limit_not_applied', $postarr );
+				} else {
+					if ( $subscription_status !== 'active' ) {
+						do_action( 'upl_network_limit_applied', $postarr );
+						add_action( 'admin_notices', function() {
+							?><div class="error"><p><?php esc_html_e( 'Network Admin' ); echo ': '; esc_html_e( 'Posts limit exceeded', 'subscriber-posts-limit' ); ?></p></div><?php
+						} );
+						return true;
+					} else {
+						for ( $i = 0; $i < get_site_option( 'upl_site_rules_count' ); $i++ ) {
+							if ( isset( get_site_option( 'upl_site_num_limit' )[ $i ] ) && '' !== get_site_option( 'upl_site_num_limit' )[ $i ] && get_site_option( 'upl_site_posts_type' )[ $i ] === $postarr['post_type'] && $subscription_plan_id == get_site_option( 'upl_site_subscriber_plan' )[ $i ] ) {
+								$upl_query = new wp_query( apply_filters( 'upl_network_query', [
+									'author'	=> $postarr['post_author'],
+									'post_type'	=> $postarr['post_type'],
+									'post_status'	=> [ 'any', 'trash', 'draft' ],
+									'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => $start_date ]
+								], $i ) );
+								if ( 0 <= $upl_query->found_posts - get_site_option( 'upl_site_num_limit' )[ $i ] ) {
+									do_action( 'upl_network_limit_applied', $postarr );
+									add_action( 'admin_notices', function() {
+										?><div class="error"><p><?php esc_html_e( 'Network Admin' ); echo ': '; esc_html_e( 'Posts limit exceeded', 'subscriber-posts-limit' ); ?></p></div><?php
+									} );
+									return true;
+								}
+							}
 						}
 					}
 				}
-				do_action( 'upl_network_limit_not_applied', $postarr );
 			}
 			if ( ! current_user_can( get_option( 'upl_manage_cap' ) ) ) {
 				$relevant_rule = '';
 				for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) {
-					if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $postarr['post_type'] && $subscription_plan_id == get_option( 'upl_subscriber_plan' )[ $i ] ) {
-						$upl_query = new wp_query( apply_filters( 'upl_query', [
-							'orderby'	=> 'date',
-							'order'		=> 'ASC',
-							'author'	=> $postarr['post_author'],
-							'post_type'	=> $postarr['post_type'],
-							'post_status'	=> [ 'any', 'trash', 'draft' ],
-							'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => $start_date ]
-						], $i ) );
-						if ( $subscription_status !== 'active' || ( $subscription_status === 'active' && 0 <= $upl_query->found_posts - get_option( 'upl_num_limit' )[ $i ] ) ) {
+					if ( $role !== 'subscriber' ) {
+						$relevant_rule = '';
+						break;
+					} else {
+						if ( $subscription_status !== 'active' ) {
 							$relevant_rule = $i;
 							if ( 'restrictive' === get_option( 'upl_priority' ) ) {
 								break;
 							}
-						} elseif ( 'permissive' === get_option( 'upl_priority' ) ) {
-							$relevant_rule = '';
-							break;
+						} else {
+							if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $postarr['post_type'] && $subscription_plan_id == get_option( 'upl_subscriber_plan' )[ $i ] ) {
+								$upl_query = new wp_query( apply_filters( 'upl_query', [
+									'orderby'	=> 'date',
+									'order'		=> 'ASC',
+									'author'	=> $postarr['post_author'],
+									'post_type'	=> $postarr['post_type'],
+									'post_status'	=> [ 'any', 'trash', 'draft' ],
+									'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => $start_date ]
+								], $i ) );
+								if ( 0 <= $upl_query->found_posts - get_option( 'upl_num_limit' )[ $i ] ) {
+									$relevant_rule = $i;
+									if ( 'restrictive' === get_option( 'upl_priority' ) ) {
+										break;
+									}
+								} elseif ( 'permissive' === get_option( 'upl_priority' ) ) {
+									$relevant_rule = '';
+									break;
+								}
+							}
 						}
 					}
 				}
@@ -559,23 +584,37 @@ class WP_UPL {
 					$subscription_plan_id = $member->subscriptions[0]['subscription_plan_id'];
 				}
 			}
+			$user = wp_get_current_user();
+			$role = $user->roles[0];
 			$relevant_rule = '';
 			for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) {
-				if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $atts['type'] && $subscription_plan_id == get_option( 'upl_subscriber_plan' )[ $i ] ) {
-					$upl_query = new wp_query( apply_filters( 'upl_query', [
-						'author'	=> $post_author,
-						'post_type'	=> $atts['type'],
-						'post_status'	=> [ 'any', 'trash', 'draft' ],
-						'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => $start_date ]
-					], $i ) );
-					if ( $subscription_status !== 'active' || ( $subscription_status === 'active' && 0 <= $upl_query->found_posts - get_option( 'upl_num_limit' )[ $i ] ) ) {
+				if ( $role !== 'subscriber' ) {
+					$relevant_rule = '';
+					break;
+				} else {
+					if ( $subscription_status !== 'active' ) {
 						$relevant_rule = $i;
 						if ( 'restrictive' === get_option( 'upl_priority' ) ) {
 							break;
 						}
-					} elseif ( 'permissive' === get_option( 'upl_priority' ) ) {
-						$relevant_rule = '';
-						break;
+					} else {
+						if ( isset( get_option( 'upl_num_limit' )[ $i ] ) && '' !== get_option( 'upl_num_limit' )[ $i ] && get_option( 'upl_posts_type' )[ $i ] === $atts['type'] && $subscription_plan_id == get_option( 'upl_subscriber_plan' )[ $i ] ) {
+							$upl_query = new wp_query( apply_filters( 'upl_query', [
+								'author'	=> $post_author,
+								'post_type'	=> $atts['type'],
+								'post_status'	=> [ 'any', 'trash', 'draft' ],
+								'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => $start_date ]
+							], $i ) );
+							if ( 0 <= $upl_query->found_posts - get_option( 'upl_num_limit' )[ $i ] ) {
+								$relevant_rule = $i;
+								if ( 'restrictive' === get_option( 'upl_priority' ) ) {
+									break;
+								}
+							} elseif ( 'permissive' === get_option( 'upl_priority' ) ) {
+								$relevant_rule = '';
+								break;
+							}
+						}
 					}
 				}
 			}
