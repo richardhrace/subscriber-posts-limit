@@ -238,6 +238,16 @@ class WP_UPL {
 						<th><label title="<?php esc_html_e( 'The number of posts allowed', 'subscriber-posts-limit' ); ?>" for="upl_num_limit[<?php echo $i; ?>]"><?php esc_html_e( 'Limit', 'subscriber-posts-limit' ); ?></label></th>
 						<td><input type="number" min="0" max="9999" id="upl_num_limit[<?php echo $i; ?>]" name="upl_num_limit[<?php echo $i; ?>]" value="<?php if ( isset( get_option( 'upl_num_limit' )[ $i ] ) ) echo get_option( 'upl_num_limit' )[ $i ]; ?>" /></td>
 					</tr>
+					<tr valign="top">
+						<th><label title="<?php esc_html_e( 'In each what period to reset the count', 'user-posts-limit' ); ?>" for="upl_period[<?php echo $i; ?>]"><?php esc_html_e( 'Cycle', 'user-posts-limit' ); ?></label></th>
+						<td><select id="upl_period[<?php echo $i; ?>]" name="upl_period[<?php echo $i; ?>]">
+							<option value="1970"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1970' ); ?>><?php esc_html_e( 'None' ); ?></option>
+							<option value="1 year ago"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1 year ago' ); ?>><?php esc_html_e( 'Year' ); ?></option>
+							<option value="1 month ago"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1 month ago' ); ?>><?php esc_html_e( 'Month' ); ?></option>
+							<option value="1 week ago"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1 week ago' ); ?>><?php esc_html_e( 'Week' ); ?></option>
+							<option value="1 day ago"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1 day ago' ); ?>><?php esc_html_e( 'Day' ); ?></option>
+						</td>
+					</tr>
 				<?php endfor; ?>
 			</table>
 			<?php submit_button(); ?>
@@ -361,6 +371,16 @@ class WP_UPL {
 					<tr valign="top">
 						<th><label title="<?php esc_html_e( 'The number of posts allowed', 'subscriber-posts-limit' ); ?>" for="upl_site_num_limit[<?php echo $i; ?>]"><?php esc_html_e( 'Limit', 'subscriber-posts-limit' ); ?></label></th>
 						<td><input type="number" min="0" max="9999" id="upl_site_num_limit[<?php echo $i; ?>]" name="upl_site_num_limit[<?php echo $i; ?>]" value="<?php if ( isset( get_site_option( 'upl_site_num_limit' )[ $i ] ) ) echo get_site_option( 'upl_site_num_limit' )[ $i ]; ?>" /></td>
+					</tr>
+					<tr valign="top">
+						<th><label title="<?php esc_html_e( 'In each what period to reset the count', 'user-posts-limit' ); ?>" for="upl_site_period[<?php echo $i; ?>]"><?php esc_html_e( 'Cycle', 'user-posts-limit' ); ?></label></th>
+						<td><select id="upl_site_period[<?php echo $i; ?>]" name="upl_site_period[<?php echo $i; ?>]">
+							<option value="1970"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1970' ); ?>><?php esc_html_e( 'None' ); ?></option>
+							<option value="1 year ago"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1 year ago' ); ?>><?php esc_html_e( 'Year' ); ?></option>
+							<option value="1 month ago"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1 month ago' ); ?>><?php esc_html_e( 'Month' ); ?></option>
+							<option value="1 week ago"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1 week ago' ); ?>><?php esc_html_e( 'Week' ); ?></option>
+							<option value="1 day ago"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1 day ago' ); ?>><?php esc_html_e( 'Day' ); ?></option>
+						</td>
 					</tr>
 				<?php endfor; ?>
 			</table>
