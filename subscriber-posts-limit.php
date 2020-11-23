@@ -120,7 +120,7 @@ class WP_UPL {
 	 */
 	public function wp_register_settings() {
 		add_option( 'upl_rules_count', '1' );
-		add_option( 'upl_message', __( 'Posts limit exceeded', 'subscriber-posts-limit' ) . ' (' . __( 'Please upgrade your subscription plan.' ) . ': {extra_posts} {type})' );
+		add_option( 'upl_message', __( 'Posts limit exceeded', 'subscriber-posts-limit' ) . ' (' . __( 'Please upgrade your subscription plan or delete permanently' ) . ': {extra_posts} {type})' );
 		add_option( 'upl_notice', WP_DEBUG && true === WP_DEBUG ? 'Fullscreen' : 'embed' );
 		add_option( 'upl_priority', 'permissive' );
 		add_option( 'upl_manage_cap', 'manage_options' );
@@ -237,16 +237,6 @@ class WP_UPL {
 					<tr valign="top">
 						<th><label title="<?php esc_html_e( 'The number of posts allowed', 'subscriber-posts-limit' ); ?>" for="upl_num_limit[<?php echo $i; ?>]"><?php esc_html_e( 'Limit', 'subscriber-posts-limit' ); ?></label></th>
 						<td><input type="number" min="0" max="9999" id="upl_num_limit[<?php echo $i; ?>]" name="upl_num_limit[<?php echo $i; ?>]" value="<?php if ( isset( get_option( 'upl_num_limit' )[ $i ] ) ) echo get_option( 'upl_num_limit' )[ $i ]; ?>" /></td>
-					</tr>
-					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'In each what period to reset the count', 'subscriber-posts-limit' ); ?>" for="upl_period[<?php echo $i; ?>]"><?php esc_html_e( 'Cycle', 'subscriber-posts-limit' ); ?></label></th>
-						<td><select id="upl_period[<?php echo $i; ?>]" name="upl_period[<?php echo $i; ?>]">
-							<option value="1970"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1970' ); ?>><?php esc_html_e( 'None' ); ?></option>
-							<option value="1 year ago"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1 year ago' ); ?>><?php esc_html_e( 'Year' ); ?></option>
-							<option value="1 month ago"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1 month ago' ); ?>><?php esc_html_e( 'Month' ); ?></option>
-							<option value="1 week ago"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1 week ago' ); ?>><?php esc_html_e( 'Week' ); ?></option>
-							<option value="1 day ago"<?php if ( isset( get_option( 'upl_period' )[ $i ] ) ) selected( get_option( 'upl_period' )[ $i ], '1 day ago' ); ?>><?php esc_html_e( 'Day' ); ?></option>
-						</td>
 					</tr>
 				<?php endfor; ?>
 			</table>
@@ -372,16 +362,6 @@ class WP_UPL {
 						<th><label title="<?php esc_html_e( 'The number of posts allowed', 'subscriber-posts-limit' ); ?>" for="upl_site_num_limit[<?php echo $i; ?>]"><?php esc_html_e( 'Limit', 'subscriber-posts-limit' ); ?></label></th>
 						<td><input type="number" min="0" max="9999" id="upl_site_num_limit[<?php echo $i; ?>]" name="upl_site_num_limit[<?php echo $i; ?>]" value="<?php if ( isset( get_site_option( 'upl_site_num_limit' )[ $i ] ) ) echo get_site_option( 'upl_site_num_limit' )[ $i ]; ?>" /></td>
 					</tr>
-					<tr valign="top">
-						<th><label title="<?php esc_html_e( 'In each what period to reset the count', 'subscriber-posts-limit' ); ?>" for="upl_site_period[<?php echo $i; ?>]"><?php esc_html_e( 'Cycle', 'subscriber-posts-limit' ); ?></label></th>
-						<td><select id="upl_site_period[<?php echo $i; ?>]" name="upl_site_period[<?php echo $i; ?>]">
-							<option value="1970"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1970' ); ?>><?php esc_html_e( 'None' ); ?></option>
-							<option value="1 year ago"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1 year ago' ); ?>><?php esc_html_e( 'Year' ); ?></option>
-							<option value="1 month ago"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1 month ago' ); ?>><?php esc_html_e( 'Month' ); ?></option>
-							<option value="1 week ago"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1 week ago' ); ?>><?php esc_html_e( 'Week' ); ?></option>
-							<option value="1 day ago"<?php if ( isset( get_site_option( 'upl_site_period' )[ $i ] ) ) selected( get_site_option( 'upl_site_period' )[ $i ], '1 day ago' ); ?>><?php esc_html_e( 'Day' ); ?></option>
-						</td>
-					</tr>
 				<?php endfor; ?>
 			</table>
 			<?php submit_button(); ?>
@@ -466,21 +446,15 @@ class WP_UPL {
 	public function wp_limit_post_save( $maybe_empty, $postarr ) {
 		if ( empty( $postarr['ID'] ) && ( ! is_multisite() || is_multisite() && ! current_user_can( 'create_users' ) ) ) {
 			$member =  $postarr['post_author'];
+			$start_date = '';
 			$subscription_status = '';
 			$subscription_plan_id = '';
 			if ( function_exists( 'pms_get_member' ) ) {
 				$member = pms_get_member( $member );
 				if( !empty( $member->subscriptions ) ) {
+					$start_date = $member->subscriptions[0]['start_date'];
+					$subscription_status = $member->subscriptions[0]['status'];
 					$subscription_plan_id = $member->subscriptions[0]['subscription_plan_id'];
-					if ( count( $member->subscriptions ) == 1 ) {
-						$subscription_status = $member->subscriptions[0]['status'];
-					}
-					else {
-						$subscription_status = '';
-						foreach( $member->subscriptions as $subscription_plan ){
-							$subscription_status .= '<div>'. $subscription_plan['status'] .'</div>';
-						}
-					}
 				}
 			}
 			if ( is_multisite() && get_site_option( 'upl_site_rules_count' ) ) {
@@ -490,9 +464,9 @@ class WP_UPL {
 							'author'	=> $postarr['post_author'],
 							'post_type'	=> $postarr['post_type'],
 							'post_status'	=> [ 'any', 'trash', 'draft' ],
-							'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => get_site_option( 'upl_site_period' )[ $i ] ]
+							'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => $start_date ]
 						], $i ) );
-						if ( 0 <= $upl_query->found_posts - get_site_option( 'upl_site_num_limit' )[ $i ] ) {
+						if ( $subscription_status !== 'active' || ( $subscription_status === 'active' && 0 <= $upl_query->found_posts - get_site_option( 'upl_site_num_limit' )[ $i ] ) ) {
 							do_action( 'upl_network_limit_applied', $postarr );
 							add_action( 'admin_notices', function() {
 								?><div class="error"><p><?php esc_html_e( 'Network Admin' ); echo ': '; esc_html_e( 'Posts limit exceeded', 'subscriber-posts-limit' ); ?></p></div><?php
@@ -513,9 +487,9 @@ class WP_UPL {
 							'author'	=> $postarr['post_author'],
 							'post_type'	=> $postarr['post_type'],
 							'post_status'	=> [ 'any', 'trash', 'draft' ],
-							'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => get_option( 'upl_period' )[ $i ] ]
+							'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => $start_date ]
 						], $i ) );
-						if ( 0 <= $upl_query->found_posts - get_option( 'upl_num_limit' )[ $i ] ) {
+						if ( $subscription_status !== 'active' || ( $subscription_status === 'active' && 0 <= $upl_query->found_posts - get_option( 'upl_num_limit' )[ $i ] ) ) {
 							$relevant_rule = $i;
 							if ( 'restrictive' === get_option( 'upl_priority' ) ) {
 								break;
@@ -574,21 +548,15 @@ class WP_UPL {
 				'message' => get_option( 'upl_message' ),
 			], $atts, 'upl_hide' );
 			$post_author = get_current_user_id();
+			$start_date = '';
 			$subscription_status = '';
 			$subscription_plan_id = '';
 			if ( function_exists( 'pms_get_member' ) ) {
 				$member = pms_get_member( $post_author );
 				if( !empty( $member->subscriptions ) ) {
+					$start_date = $member->subscriptions[0]['start_date'];
+					$subscription_status = $member->subscriptions[0]['status'];
 					$subscription_plan_id = $member->subscriptions[0]['subscription_plan_id'];
-					if ( count( $member->subscriptions ) == 1 ) {
-						$subscription_status = $member->subscriptions[0]['status'];
-					}
-					else {
-						$subscription_status = '';
-						foreach( $member->subscriptions as $subscription_plan ){
-							$subscription_status .= '<div>'. $subscription_plan['status'] .'</div>';
-						}
-					}
 				}
 			}
 			$relevant_rule = '';
@@ -598,9 +566,9 @@ class WP_UPL {
 						'author'	=> $post_author,
 						'post_type'	=> $atts['type'],
 						'post_status'	=> [ 'any', 'trash', 'draft' ],
-						'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => get_option( 'upl_period' )[ $i ] ]
+						'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => $start_date ]
 					], $i ) );
-					if ( 0 <= $upl_query->found_posts - get_option( 'upl_num_limit' )[ $i ] ) {
+					if ( $subscription_status !== 'active' || ( $subscription_status === 'active' && 0 <= $upl_query->found_posts - get_option( 'upl_num_limit' )[ $i ] ) ) {
 						$relevant_rule = $i;
 						if ( 'restrictive' === get_option( 'upl_priority' ) ) {
 							break;
@@ -694,13 +662,20 @@ class WP_UPL {
 	 * @return mixed
 	 */
 	public function wp_modify_user_table_row( $row_output, $column_id_attr, $user_id ) {
+		$start_date = '';
+		if ( function_exists( 'pms_get_member' ) ) {
+			$member = pms_get_member( $user_id );
+			if( !empty( $member->subscriptions ) ) {
+				$start_date = $member->subscriptions[0]['start_date'];
+			}
+		}
 		$i = str_replace( 'rule', '', $column_id_attr );
 		if ( isset( get_option( 'upl_subscriber_plan' )[ $i ] ) && in_array( get_option( 'upl_subscriber_plan' )[ $i ], get_userdata( $user_id )->roles ) && ! user_can( $user_id, get_option( 'upl_manage_cap' ) ) && ( ! is_multisite() || is_multisite() && ! user_can( $user_id, 'create_users' ) ) ) {
 			$upl_query = new wp_query( apply_filters( 'upl_query', [
 				'author'	=> $user_id,
 				'post_type'	=> get_option( 'upl_posts_type' )[ $i ],
 				'post_status'	=> [ 'any', 'trash', 'draft' ],
-				'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => get_option( 'upl_period' )[ str_replace( 'rule', '', $column_id_attr ) ] ]
+				'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => $start_date ]
 				], $i ) );
 			return '<span style=color:' . ( $upl_query->found_posts < get_option( 'upl_num_limit' )[ $i ] ? '' : 'coral' ) . '>' . $upl_query->found_posts . ' / ' . get_option( 'upl_num_limit' )[ $i ] . '</span>';
 		}
@@ -715,21 +690,13 @@ class WP_UPL {
 		$limits = [];
 		$author = get_current_user_id();
 		if ( ! current_user_can( get_option( 'upl_manage_cap' ) ) && ( ! is_multisite() || is_multisite() && ! current_user_can( 'create_users' ) ) ) {
-			$subscription_status = '';
+			$start_date = '';
 			$subscription_plan_id = '';
 			if ( function_exists( 'pms_get_member' ) ) {
 				$member = pms_get_member( $author );
 				if( !empty( $member->subscriptions ) ) {
+					$start_date = $member->subscriptions[0]['start_date'];
 					$subscription_plan_id = $member->subscriptions[0]['subscription_plan_id'];
-					if ( count( $member->subscriptions ) == 1 ) {
-						$subscription_status = $member->subscriptions[0]['status'];
-					}
-					else {
-						$subscription_status = '';
-						foreach( $member->subscriptions as $subscription_plan ){
-							$subscription_status .= '<div>'. $subscription_plan['status'] .'</div>';
-						}
-					}
 				}
 			}
 			for ( $i = 0; $i < get_option( 'upl_rules_count' ); $i++ ) {
@@ -738,7 +705,7 @@ class WP_UPL {
 						'author'	=> $author,
 						'post_type'	=> get_option( 'upl_posts_type' )[ $i ],
 						'post_status'	=> [ 'any', 'trash', 'draft' ],
-						'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => get_option( 'upl_period' )[ $i ] ]
+						'date_query'	=> [ 'column' => 'post_date_gmt', 'after' => $start_date ]
 						], $i ) );
 					$limits[ $i ] = $upl_query->found_posts;
 				}
