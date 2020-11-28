@@ -76,6 +76,7 @@ class WP_UPL {
 	 */
 	public function init_limits() {
 		add_action( 'admin_init', [ $this, 'wp_add_author_support_to_posts' ] );
+		add_action( 'publish_post', [ $this, 'wp_upl_send_post_notification_to_subscribers' ], 10, 2 );
 		add_filter( 'wp_insert_post_empty_content', [ $this, 'wp_limit_post_save' ], 999, 2 );
 		add_shortcode( 'upl_hide', [ $this, 'wp_upl_hide_shortcode' ] );
 		add_shortcode( 'upl_limits', [ $this, 'wp_upl_limits_shortcode' ] );
@@ -428,6 +429,42 @@ class WP_UPL {
 		// 	}
 		// 	echo '<div id="message" class="updated notice is-dismissible"><p>' . __( 'Settings updated.' ) . '</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_attr__( 'Dismiss this notice.' ) . '</span></button></div>'; 
 		// }
+	}
+
+	/**
+	 * Send subscribers push notification when post is published.
+	 * @param object $post
+	 * @return mixed
+	 */
+
+	public function wp_upl_send_post_notification_to_subscribers( $post_ID, $post ) {
+		if ( $post->post_type !== 'post' ) {
+			return;
+		}
+
+		$pushAPI = 'https://mamabee.herokuapp.com/api/sendNotifications';
+
+		$body = [
+			'title'  	  => 'Mamabee post update',
+			'body'   	  => $post->post_title,
+			'url'    	  => get_permalink( $post_ID ),
+			'tag'    	  => 'Mamabee post',
+		];
+		$body = wp_json_encode( $body );
+		$options = [
+			'body'        => $body,
+			'headers'     => [
+				'Content-Type' => 'application/json',
+			],
+			'timeout'     => 60,
+			'redirection' => 5,
+			'blocking'    => true,
+			'httpversion' => '1.0',
+			'sslverify'   => false,
+			'data_format' => 'body',
+		];
+
+		wp_remote_post( $pushAPI, $options );
 	}
 
 	/**
